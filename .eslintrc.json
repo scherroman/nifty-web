@@ -1,0 +1,63 @@
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "project": "tsconfig.json"
+    },
+    "env": {
+        "node": true,
+        "es2020": true
+    },
+    "plugins": ["@typescript-eslint"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:@typescript-eslint/strict",
+        "next/core-web-vitals"
+    ],
+    "rules": {
+        "prefer-const": "off",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/explicit-function-return-type": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/restrict-template-expressions": "off",
+        "@typescript-eslint/consistent-type-assertions": [
+            "error",
+            { "assertionStyle": "never" }
+        ],
+        "@typescript-eslint/no-misused-promises": [
+            "error",
+            {
+                "checksVoidReturn": false
+            }
+        ],
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": "default",
+                "format": ["strictCamelCase"],
+                "leadingUnderscore": "allow"
+            },
+            {
+                "selector": "variable",
+                "modifiers": ["const"],
+                "format": ["StrictPascalCase", "UPPER_CASE"]
+            },
+            {
+                "selector": ["variable", "parameter"],
+                "modifiers": ["destructured"],
+                "format": null
+            },
+            {
+                "selector": ["function"],
+                "format": ["strictCamelCase", "StrictPascalCase"]
+            },
+            {
+                "selector": ["typeLike", "enum", "enumMember"],
+                "format": ["StrictPascalCase"]
+            }
+        ]
+    }
+}
