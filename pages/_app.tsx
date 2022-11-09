@@ -16,7 +16,7 @@ import { MotionConfig } from 'framer-motion'
 
 import { NftMarketplaceContext } from '../shared/contexts'
 import { NotificationProvider } from '../shared/hooks/useNotify'
-import NFT_MARKETPLACE from '../contracts/nftMarketplace'
+import NIFTY from '../contracts/nftMarketplace'
 
 import Layout from '../components/Layout'
 
@@ -106,13 +106,10 @@ const App: FunctionComponent<AppProps> = ({
 }: AppProps) => {
     let { chain } = useNetwork()
     let chainId = chain?.id ?? ''
-    let address =
-        chainId in NFT_MARKETPLACE.addresses
-            ? NFT_MARKETPLACE.addresses[chainId]
-            : ''
+    let address = chainId in NIFTY.addresses ? NIFTY.addresses[chainId] : ''
     let [nftMarketplace, setNftMarketplace] = useState({
         address,
-        abi: NFT_MARKETPLACE.abi
+        abi: NIFTY.abi
     })
 
     useEffect(() => {

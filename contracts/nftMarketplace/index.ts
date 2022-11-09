@@ -5,6 +5,6 @@ import abi from './abi'
 
 const Addresses = zod.record(zod.string(), zod.string())
 let addresses = Addresses.parse(_addresses)
-const NFT_MARKETPLACE = { addresses, abi }
+const NIFTY = { addresses, abi }
 
-export default NFT_MARKETPLACE
+export default NIFTY

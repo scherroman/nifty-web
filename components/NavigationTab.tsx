@@ -24,30 +24,33 @@ const NavigationTab: FunctionComponent<NavigationTabProperties> = ({
     let [isHovering, setIsHovering] = useState(false)
 
     return (
-        <Link href={href} passHref>
-            <Frame
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    padding: 0.5,
-                    paddingX: 1.5,
-                    borderRadius: 50,
-                    cursor: 'pointer',
-                    ...sx
-                }}
-                animate={{
-                    backgroundColor:
-                        href === router.pathname
-                            ? theme.palette.background.level2
-                            : isHovering
-                            ? theme.palette.background.level1
-                            : theme.palette.background.body
-                }}
-                onHoverStart={(): void => setIsHovering(true)}
-                onHoverEnd={(): void => setIsHovering(false)}
-            >
-                <Typography fontWeight='lg'>{title}</Typography>
-            </Frame>
+        <Link href={href}>
+            <a style={{ textDecoration: 'none' }}>
+                <Frame
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        flexGrow: { mobile: 1, tablet: 0 },
+                        padding: 0.5,
+                        paddingX: 1.5,
+                        borderRadius: 50,
+                        cursor: 'pointer',
+                        ...sx
+                    }}
+                    animate={{
+                        backgroundColor:
+                            href === router.pathname
+                                ? theme.palette.background.level2
+                                : isHovering
+                                ? theme.palette.background.level1
+                                : theme.palette.background.body
+                    }}
+                    onHoverStart={(): void => setIsHovering(true)}
+                    onHoverEnd={(): void => setIsHovering(false)}
+                >
+                    <Typography fontWeight='lg'>{title}</Typography>
+                </Frame>
+            </a>
         </Link>
     )
 }

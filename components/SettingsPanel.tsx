@@ -1,6 +1,8 @@
 import { FunctionComponent, useRef, Fragment } from 'react'
+
 import { useClickAway } from 'react-use'
 import { useColorScheme } from '@mui/joy/styles'
+import { useLockBodyScroll } from 'react-use'
 
 import { Box, Stack, IconButton, Typography, Switch, FormLabel } from '@mui/joy'
 import CloseIcon from '@mui/icons-material/Close'
@@ -16,6 +18,7 @@ interface SettingsPanelProperties {
 const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
     onClose
 }: SettingsPanelProperties) => {
+    useLockBodyScroll()
     let { mode: colorMode, setMode: setColorMode } = useColorScheme()
     let ref = useRef(null)
 
@@ -29,11 +32,6 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
 
     return (
         <Fragment>
-            <style jsx global>{`
-                body {
-                    overflow: hidden;
-                }
-            `}</style>
             <Box
                 position='fixed'
                 top={0}

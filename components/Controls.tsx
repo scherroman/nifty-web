@@ -35,7 +35,7 @@ const Controls: FunctionComponent<ControlsProperties> = ({
 
     let message: string | undefined
     if (nftMarketplace.address === '') {
-        message = 'Nft Marketplace smart contract not found'
+        message = 'Nifty smart contract not found'
     } else if (isLoading) {
         message = 'Loading...'
     } else if (numberOfListingsError) {

@@ -1,15 +1,15 @@
 import { createContext } from 'react'
 
-import NFT_MARKETPLACE from '../contracts/nftMarketplace'
+import NIFTY from '../contracts/nftMarketplace'
 
 interface NftMarketplaceContext {
     address: string
-    abi: typeof NFT_MARKETPLACE.abi
+    abi: typeof NIFTY.abi
 }
 
 export const NftMarketplaceContext = createContext<NftMarketplaceContext>({
     address: '',
-    abi: NFT_MARKETPLACE.abi
+    abi: NIFTY.abi
 })
 
 interface InterfaceContext {
