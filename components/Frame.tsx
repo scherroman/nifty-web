@@ -10,7 +10,7 @@ const Frame = forwardRef<HTMLDivElement, FrameProperties>(
         return (
             <Sheet
                 component={motion.div}
-                sx={{ bgcolor: 'background.body', ...sx }}
+                sx={{ ...sx }}
                 {...properties}
                 ref={ref}
             >

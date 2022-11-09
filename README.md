@@ -20,6 +20,10 @@ Chain ID: 31337
 
 Currency Symbol: ETH
 
+## Notes
+
+The [Frame](./components/Frame.tsx) component is a generic base component that combines Framer Motion's [motion.div](https://www.framer.com/docs/component/) with Joy UI's generic [`Sheet`](https://mui.com/joy-ui/react-sheet/), so that any location that uses it instead of a `div`, `motion.div`, `Box`, or `Sheet` can easily use both theme values and animatations.
+
 ## Troubleshooting
 
 ### Nonce too high error when testing locally with hardhat

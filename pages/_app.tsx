@@ -18,6 +18,8 @@ import { NftMarketplaceContext } from '../shared/contexts'
 import { NotificationProvider } from '../shared/hooks/useNotify'
 import NFT_MARKETPLACE from '../contracts/nftMarketplace'
 
+import Layout from '../components/Layout'
+
 const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 
 if (ALCHEMY_API_KEY === undefined) {
@@ -72,6 +74,15 @@ declare module '@mui/joy/styles' {
 }
 
 let theme = extendTheme({
+    colorSchemes: {
+        dark: {
+            palette: {
+                background: {
+                    surface: 'var(--joy-palette-neutral-900)'
+                }
+            }
+        }
+    },
     breakpoints: {
         values: {
             mobile: 0,
@@ -119,7 +130,9 @@ const App: FunctionComponent<AppProps> = ({
                     <CssBaseline />
                     <MotionConfig transition={{ type: 'tween', duration: 0.2 }}>
                         <NotificationProvider>
-                            <Component {...pageProps} />
+                            <Layout>
+                                <Component {...pageProps} />
+                            </Layout>
                         </NotificationProvider>
                     </MotionConfig>
                 </CssVarsProvider>

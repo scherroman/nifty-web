@@ -19,9 +19,13 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
     let { mode: colorMode, setMode: setColorMode } = useColorScheme()
     let ref = useRef(null)
 
-    useClickAway(ref, () => {
-        onClose()
-    })
+    useClickAway(
+        ref,
+        () => {
+            onClose()
+        },
+        ['mouseup']
+    )
 
     return (
         <Fragment>
