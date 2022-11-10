@@ -14,9 +14,9 @@ import { CssVarsProvider, extendTheme } from '@mui/joy/styles'
 import CssBaseline from '@mui/joy/CssBaseline'
 import { MotionConfig } from 'framer-motion'
 
-import { NftMarketplaceContext } from '../shared/contexts'
+import { NiftyContext } from '../shared/contexts'
 import { NotificationProvider } from '../shared/hooks/useNotify'
-import NIFTY from '../contracts/nftMarketplace'
+import NIFTY from '../contracts/nifty'
 
 import Layout from '../components/Layout'
 
@@ -107,13 +107,13 @@ const App: FunctionComponent<AppProps> = ({
     let { chain } = useNetwork()
     let chainId = chain?.id ?? ''
     let address = chainId in NIFTY.addresses ? NIFTY.addresses[chainId] : ''
-    let [nftMarketplace, setNftMarketplace] = useState({
+    let [nifty, setNifty] = useState({
         address,
         abi: NIFTY.abi
     })
 
     useEffect(() => {
-        setNftMarketplace(
+        setNifty(
             produce((draft) => {
                 draft.address = address
             })
@@ -122,7 +122,7 @@ const App: FunctionComponent<AppProps> = ({
 
     return (
         <WagmiConfig client={client}>
-            <NftMarketplaceContext.Provider value={nftMarketplace}>
+            <NiftyContext.Provider value={nifty}>
                 <CssVarsProvider theme={theme}>
                     <CssBaseline />
                     <MotionConfig transition={{ type: 'tween', duration: 0.2 }}>
@@ -133,7 +133,7 @@ const App: FunctionComponent<AppProps> = ({
                         </NotificationProvider>
                     </MotionConfig>
                 </CssVarsProvider>
-            </NftMarketplaceContext.Provider>
+            </NiftyContext.Provider>
         </WagmiConfig>
     )
 }

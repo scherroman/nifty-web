@@ -5,7 +5,7 @@ import { useContractRead } from 'wagmi'
 import { Box, Typography } from '@mui/joy'
 import { SxProps } from '@mui/joy/styles/types'
 
-import { NftMarketplaceContext } from '../shared/contexts'
+import { NiftyContext } from '../shared/contexts'
 
 interface ControlsProperties {
     sx?: SxProps
@@ -14,14 +14,14 @@ interface ControlsProperties {
 const Controls: FunctionComponent<ControlsProperties> = ({
     sx
 }: ControlsProperties) => {
-    let nftMarketplace = useContext(NftMarketplaceContext)
+    let nifty = useContext(NiftyContext)
     let {
         data: _numberOfListings,
         isLoading: isLoadingNumberOfListings,
         isError: numberOfListingsError
     } = useContractRead({
-        address: nftMarketplace.address,
-        abi: nftMarketplace.abi,
+        address: nifty.address,
+        abi: nifty.abi,
         functionName: 'numberOfListings',
         watch: true
     })
@@ -34,7 +34,7 @@ const Controls: FunctionComponent<ControlsProperties> = ({
     let isLoading = isLoadingNumberOfListings
 
     let message: string | undefined
-    if (nftMarketplace.address === '') {
+    if (nifty.address === '') {
         message = 'Nifty smart contract not found'
     } else if (isLoading) {
         message = 'Loading...'
@@ -44,7 +44,7 @@ const Controls: FunctionComponent<ControlsProperties> = ({
 
     return (
         <Box sx={sx}>
-            {nftMarketplace.address && !isLoading && (
+            {nifty.address && !isLoading && (
                 <Fragment>
                     <Typography level='body1'>
                         {`Number of listings: ${numberOfListings}`}
