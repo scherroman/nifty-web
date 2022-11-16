@@ -2,7 +2,7 @@ import { FunctionComponent, useRef } from 'react'
 
 import { useClickAway } from 'react-use'
 
-import { Menu as MuiMenu, MenuProps } from '@mui/joy'
+import { Menu as JoyMenu, MenuProps } from '@mui/joy'
 
 type MenuProperties = MenuProps
 
@@ -24,9 +24,9 @@ const Menu: FunctionComponent<MenuProperties> = ({
     )
 
     return (
-        <MuiMenu {...properties} ref={ref} onClose={(): void => void 0}>
+        <JoyMenu {...properties} ref={ref} onClose={(): void => void 0}>
             {children}
-        </MuiMenu>
+        </JoyMenu>
     )
 }
 

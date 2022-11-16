@@ -7,15 +7,15 @@ import {
 } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
-import { InterfaceContext } from '../shared/contexts'
-import { useIsMounted } from '../shared/hooks'
+import { InterfaceContext } from '../../shared/contexts'
+import { useIsMounted } from '../../shared/hooks'
 import { useToggle } from 'react-use'
 import { SxProps } from '@mui/joy/styles/types'
 
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
 import LogoutIcon from '@mui/icons-material/Logout'
-import SettingsIcon from '@mui/icons-material/Settings'
+import SettingsIcon from '@mui/icons-material/SettingsOutlined'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import {
@@ -29,11 +29,11 @@ import {
 } from '@mui/joy'
 import Link from 'next/link'
 
-import Menu from './Menu'
-import Frame from './Frame'
-import NavigationTab from './NavigationTab'
-import { formatAddressForDisplay } from '../shared/utilities/strings'
+import { Frame, NavigationTab } from '../atoms'
+import { Menu } from '../widgets'
+import { formatAddressForDisplay } from '../../shared/utilities/strings'
 
+export const HEIGHT = '57px'
 const DESKTOP_LEFT_HALF_MARGIN = { mobile: 0, tablet: 0.5 }
 const MOBILE_TOP_MARGIN = { mobile: 1, tablet: 0 }
 
@@ -77,14 +77,18 @@ const Header: FunctionComponent<HeaderProperties> = ({
         <Frame
             variant='outlined'
             sx={{
+                position: 'fixed',
+                width: '100%',
+                minHeight: HEIGHT,
                 display: 'flex',
                 flexDirection: { mobile: 'column', tablet: 'row' },
                 alignItems: 'center',
+                justifyContent: { mobile: 'center', tablet: null },
                 padding: 1,
-                minHeight: '57px',
                 borderLeft: 0,
                 borderRight: 0,
                 borderTop: 0,
+                zIndex: 'navbar',
                 ...sx
             }}
         >
@@ -98,6 +102,18 @@ const Header: FunctionComponent<HeaderProperties> = ({
                 }}
             >
                 <Stack direction='row' sx={{ alignItems: 'center' }}>
+                    <IconButton
+                        variant='outlined'
+                        color='neutral'
+                        size='sm'
+                        sx={{
+                            marginLeft: 1,
+                            display: { mobile: 'inline-flex', tablet: 'none' }
+                        }}
+                        onClick={toggleIsExpanded}
+                    >
+                        {isExpanded ? <CloseIcon /> : <MenuIcon />}
+                    </IconButton>
                     <Link href='/'>
                         <a style={{ textDecoration: 'none' }}>
                             <Typography
@@ -204,21 +220,13 @@ const Header: FunctionComponent<HeaderProperties> = ({
                     >
                         <SettingsIcon />
                     </IconButton>
-                    <IconButton
-                        variant='plain'
-                        color='neutral'
-                        size='md'
-                        sx={{
-                            marginLeft: 1,
-                            display: { mobile: 'inline-flex', tablet: 'none' }
-                        }}
-                        onClick={toggleIsExpanded}
-                    >
-                        {isExpanded ? <CloseIcon /> : <MenuIcon />}
-                    </IconButton>
                 </Stack>
             </Frame>
             <NavigationTabs
+                onSelect={(): void => {
+                    console.log('toggled')
+                    toggleIsExpanded()
+                }}
                 sx={{
                     marginTop: 1,
                     display: {
@@ -232,10 +240,12 @@ const Header: FunctionComponent<HeaderProperties> = ({
 }
 
 interface NavigationTabsProperties {
+    onSelect: () => void
     sx?: SxProps
 }
 
 const NavigationTabs: FunctionComponent<NavigationTabsProperties> = ({
+    onSelect,
     sx
 }: NavigationTabsProperties) => {
     return (
@@ -246,10 +256,11 @@ const NavigationTabs: FunctionComponent<NavigationTabsProperties> = ({
                 ...sx
             }}
         >
-            <NavigationTab title='Explore' href='/' />
+            <NavigationTab title='Explore' href='/' onClick={onSelect} />
             <NavigationTab
                 title='Sell'
                 href='/sell'
+                onClick={onSelect}
                 sx={{
                     marginLeft: DESKTOP_LEFT_HALF_MARGIN,
                     marginTop: MOBILE_TOP_MARGIN

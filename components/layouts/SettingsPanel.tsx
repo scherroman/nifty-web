@@ -4,10 +4,10 @@ import { useClickAway } from 'react-use'
 import { useColorScheme } from '@mui/joy/styles'
 import { useLockBodyScroll } from 'react-use'
 
-import { Box, Stack, IconButton, Typography, Switch, FormLabel } from '@mui/joy'
-import CloseIcon from '@mui/icons-material/Close'
+import CloseIcon from '@mui/icons-material/CloseRounded'
+import { Stack, IconButton, Typography, Switch, FormLabel } from '@mui/joy'
 
-import Frame from '../components/Frame'
+import { Frame } from '../atoms'
 
 const SETTINGS_PANEL_WIDTH = 300
 
@@ -32,16 +32,16 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
 
     return (
         <Fragment>
-            <Box
-                position='fixed'
-                top={0}
-                right={0}
-                width='100%'
-                height='100%'
+            <Frame
                 sx={{
+                    position: 'fixed',
+                    top: 0,
+                    right: 0,
+                    width: '100%',
+                    height: '100%',
                     bgcolor: 'background.backdrop',
                     backdropFilter: 'blur(8px)',
-                    zIndex: 'backdrop'
+                    zIndex: 'drawerBackdrop'
                 }}
             />
             <Frame
@@ -53,7 +53,6 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
                     right: 0,
                     height: '100%',
                     width: `${SETTINGS_PANEL_WIDTH}px`,
-                    padding: 2,
                     borderRight: 0,
                     borderTop: 0,
                     borderBottom: 0,
@@ -64,16 +63,27 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
                 exit={{ x: SETTINGS_PANEL_WIDTH }}
                 ref={ref}
             >
-                <Stack
-                    direction='row'
-                    sx={{ justifyContent: 'space-between', marginBottom: 2 }}
+                <Frame
+                    variant='outlined'
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        padding: 2,
+                        borderLeft: 0,
+                        borderRight: 0,
+                        borderTop: 0
+                    }}
                 >
                     <Typography level='h5'>Settings</Typography>
                     <IconButton size='sm' color='neutral' variant='plain'>
                         <CloseIcon onClick={(): void => onClose()} />
                     </IconButton>
-                </Stack>
-                <Stack direction='row' sx={{ justifyContent: 'space-between' }}>
+                </Frame>
+                <Stack
+                    direction='row'
+                    sx={{ justifyContent: 'space-between', padding: 2 }}
+                >
                     <FormLabel>Dark mode</FormLabel>
                     <Switch
                         checked={colorMode === 'dark'}

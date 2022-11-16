@@ -1,12 +1,14 @@
 import {
+    useRef,
     useState,
     useContext,
     createContext,
     useCallback,
     FunctionComponent,
-    ReactNode,
-    Fragment
+    ReactNode
 } from 'react'
+import { useClickAway } from 'react-use'
+import { AnimatePresence } from 'framer-motion'
 
 import { Alert, IconButton } from '@mui/joy'
 import InfoIcon from '@mui/icons-material/Info'
@@ -14,6 +16,10 @@ import WarningIcon from '@mui/icons-material/Warning'
 import ReportIcon from '@mui/icons-material/Report'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+
+import { Frame } from '../../components/atoms'
+
+const SLIDE_ANIMATION_DISTANCE = 50
 
 export function useNotify(): ({ message, type }: NotifyArguments) => void {
     let { notify } = useContext(NotificationContext)
@@ -67,8 +73,16 @@ interface NotificationProviderProperties {
 export const NotificationProvider: FunctionComponent<
     NotificationProviderProperties
 > = ({ children }: NotificationProviderProperties) => {
+    let ref = useRef(null)
     let [isClosed, setIsClosed] = useState(false)
     let [notification, setNotification] = useState<Notification | undefined>()
+    useClickAway(
+        ref,
+        () => {
+            setIsClosed(true)
+        },
+        ['mouseup']
+    )
 
     let notify = useCallback(({ message, type = 'info' }: NotifyArguments) => {
         let configuration = NOTIFICATION_TYPES_CONFIGURATION[type]
@@ -84,33 +98,42 @@ export const NotificationProvider: FunctionComponent<
     return (
         <NotificationContext.Provider value={{ notify }}>
             {children}
-            <Fragment>
+            <AnimatePresence>
                 {notification && !isClosed && (
-                    <Alert
-                        color={notification.color}
-                        startDecorator={notification.icon}
-                        endDecorator={
-                            <IconButton
-                                variant='plain'
-                                size='sm'
-                                color={notification.color}
-                                onClick={(): void => {
-                                    setIsClosed(true)
-                                }}
-                            >
-                                <CloseRoundedIcon />
-                            </IconButton>
-                        }
+                    <Frame
+                        initial={{ x: SLIDE_ANIMATION_DISTANCE, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        exit={{ x: SLIDE_ANIMATION_DISTANCE, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
                         sx={{
                             position: 'absolute',
                             top: (theme) => theme.spacing(1),
-                            right: (theme) => theme.spacing(1)
+                            right: (theme) => theme.spacing(1),
+                            zIndex: 'snackbar'
                         }}
                     >
-                        {notification.message}
-                    </Alert>
+                        <Alert
+                            color={notification.color}
+                            startDecorator={notification.icon}
+                            endDecorator={
+                                <IconButton
+                                    variant='plain'
+                                    size='sm'
+                                    color={notification.color}
+                                    onClick={(): void => {
+                                        setIsClosed(true)
+                                    }}
+                                >
+                                    <CloseRoundedIcon />
+                                </IconButton>
+                            }
+                            ref={ref}
+                        >
+                            {notification.message}
+                        </Alert>
+                    </Frame>
                 )}
-            </Fragment>
+            </AnimatePresence>
         </NotificationContext.Provider>
     )
 }

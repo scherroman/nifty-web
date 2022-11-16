@@ -1,6 +1,7 @@
 import { produce } from 'immer'
 import { FunctionComponent, useState, useEffect } from 'react'
 import type { AppProps } from 'next/app'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import {
     chain as CHAINS,
     configureChains,
@@ -18,13 +19,15 @@ import { NiftyContext } from '../shared/contexts'
 import { NotificationProvider } from '../shared/hooks/useNotify'
 import NIFTY from '../contracts/nifty'
 
-import Layout from '../components/Layout'
+import { Layout } from '../components/layouts'
 
 const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 
 if (ALCHEMY_API_KEY === undefined) {
     throw new Error('Missing Alchemy API Key')
 }
+
+let queryClient = new QueryClient()
 
 let { provider, webSocketProvider } = configureChains(
     [CHAINS.mainnet, CHAINS.goerli, CHAINS.hardhat],
@@ -46,8 +49,10 @@ let client = createClient({
 })
 
 interface ZindexOptions {
-    backdrop: number
+    navbar: number
+    drawerBackdrop: number
     drawer: number
+    modalBackdrop: number
     modal: number
     snackbar: number
     tooltip: number
@@ -92,11 +97,13 @@ let theme = extendTheme({
         }
     },
     zIndex: {
-        backdrop: 10,
+        navbar: 9,
+        drawerBackdrop: 10,
         drawer: 11,
-        modal: 12,
-        snackbar: 13,
-        tooltip: 14
+        modalBackdrop: 12,
+        modal: 13,
+        snackbar: 14,
+        tooltip: 15
     }
 })
 
@@ -121,20 +128,24 @@ const App: FunctionComponent<AppProps> = ({
     }, [address])
 
     return (
-        <WagmiConfig client={client}>
-            <NiftyContext.Provider value={nifty}>
-                <CssVarsProvider theme={theme}>
-                    <CssBaseline />
-                    <MotionConfig transition={{ type: 'tween', duration: 0.2 }}>
-                        <NotificationProvider>
-                            <Layout>
-                                <Component {...pageProps} />
-                            </Layout>
-                        </NotificationProvider>
-                    </MotionConfig>
-                </CssVarsProvider>
-            </NiftyContext.Provider>
-        </WagmiConfig>
+        <QueryClientProvider client={queryClient}>
+            <WagmiConfig client={client}>
+                <NiftyContext.Provider value={nifty}>
+                    <CssVarsProvider theme={theme}>
+                        <CssBaseline />
+                        <MotionConfig
+                            transition={{ type: 'tween', duration: 0.2 }}
+                        >
+                            <NotificationProvider>
+                                <Layout>
+                                    <Component {...pageProps} />
+                                </Layout>
+                            </NotificationProvider>
+                        </MotionConfig>
+                    </CssVarsProvider>
+                </NiftyContext.Provider>
+            </WagmiConfig>
+        </QueryClientProvider>
     )
 }
 

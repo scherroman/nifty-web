@@ -51,6 +51,14 @@
                 "format": null
             },
             {
+                "selector": ["objectLiteralProperty"],
+                "format": null,
+                "filter": {
+                    "regex": "^&:.*",
+                    "match": true
+                }
+            },
+            {
                 "selector": ["function"],
                 "format": ["strictCamelCase", "StrictPascalCase"]
             },

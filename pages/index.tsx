@@ -1,19 +1,113 @@
-import type { NextPage } from 'next'
-import { useAccount } from 'wagmi'
+import { Fragment, useState, useContext } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useContractWrite } from 'wagmi'
 
-import { useIsMounted } from '../shared/hooks'
+import { Listing, getHydratedListings, dummyListings } from '../models/listing'
+import { NiftyContext } from '../shared/contexts'
+import { useIsMounted, useNotify } from '../shared/hooks'
 
-import { Box } from '@mui/joy'
-import Controls from '../components/Controls'
+import { NextPage } from 'next'
+import { Typography } from '@mui/joy'
+
+import { Frame, CircularLoader } from '../components/atoms'
+import { ErrorMessage, ListingCard } from '../components/widgets'
+import { MINIMUM_LISTING_CARD_WIDTH } from '../components/widgets/ListingCard'
 
 const Home: NextPage = () => {
-    let { isConnected } = useAccount()
+    let nifty = useContext(NiftyContext)
+    let notify = useNotify()
     let isMounted = useIsMounted()
+    let [buyingListing, setBuyingListing] = useState<Listing | null>(null)
+
+    let {
+        data: listings,
+        isLoading: isLoadingListings,
+        isError: didLoadingListingsError,
+        refetch: _refetchListings,
+        remove: clearListings
+    } = useQuery({
+        queryKey: [{ name: 'listings', listings: dummyListings }],
+        queryFn: async ({ queryKey }) => {
+            let { listings } = queryKey[0]
+            return getHydratedListings(listings)
+        }
+    })
+    let { write: buyNft } = useContractWrite({
+        address: nifty.address,
+        abi: nifty.abi,
+        functionName: 'buyNft',
+        mode: 'recklesslyUnprepared',
+        onError(error) {
+            console.log(error)
+            if (!error.message.includes('ACTION_REJECTED')) {
+                notify({ message: 'Transaction failed', type: 'error' })
+            }
+        },
+        async onSuccess(transaction) {
+            await transaction.wait(1)
+            notify({ message: 'Transaction successful', type: 'success' })
+        },
+        onSettled() {
+            setBuyingListing(null)
+        }
+    })
+
+    async function refetchListings(): Promise<void> {
+        clearListings()
+        await _refetchListings()
+    }
+
+    let isLoading = isLoadingListings
+    let didError = didLoadingListingsError
+
+    if (isLoading) {
+        return <CircularLoader />
+    }
+
+    if (didError) {
+        return <ErrorMessage onClose={refetchListings} />
+    }
 
     return (
-        <Box sx={{ padding: 2 }}>
-            {isConnected && isMounted && <Controls />}
-        </Box>
+        <Fragment>
+            {isMounted && listings && (
+                <Fragment>
+                    <Typography level='h3' fontWeight='lg'>
+                        All listings
+                    </Typography>
+                    <Frame
+                        sx={{
+                            display: 'grid',
+                            gap: (theme) => theme.spacing(2),
+                            gridTemplateColumns: `repeat(auto-fill, minmax(${MINIMUM_LISTING_CARD_WIDTH}, auto))`,
+                            marginTop: 2
+                        }}
+                    >
+                        {listings.map((listing) => (
+                            <ListingCard
+                                listing={listing}
+                                // href={`/explore?address=${listing.nft.address}&id=${listing.nft.id}`}
+                                isBuyable
+                                isLoading={listing === buyingListing}
+                                onButtonClick={(): void => {
+                                    setBuyingListing(listing)
+                                    buyNft?.({
+                                        recklesslySetUnpreparedArgs: [
+                                            listing.nft.address,
+                                            listing.nft.id
+                                        ],
+                                        recklesslySetUnpreparedOverrides: {
+                                            value: listing.price
+                                        }
+                                    })
+                                }}
+                                key={`${listing.nft.address}-${listing.nft.id}`}
+                            />
+                        ))}
+                    </Frame>
+                </Fragment>
+            )}
+        </Fragment>
     )
 }
 

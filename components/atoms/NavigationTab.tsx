@@ -1,4 +1,4 @@
-import { FunctionComponent, useState } from 'react'
+import { FunctionComponent } from 'react'
 
 import { useTheme } from '@mui/joy'
 import { useRouter } from 'next/router'
@@ -11,21 +11,22 @@ import Frame from './Frame'
 interface NavigationTabProperties {
     title: string
     href: string
+    onClick: () => void
     sx?: SxProps
 }
 
 const NavigationTab: FunctionComponent<NavigationTabProperties> = ({
     title,
     href,
+    onClick,
     sx
 }: NavigationTabProperties) => {
     let theme = useTheme()
     let router = useRouter()
-    let [isHovering, setIsHovering] = useState(false)
 
     return (
         <Link href={href}>
-            <a style={{ textDecoration: 'none' }}>
+            <a style={{ textDecoration: 'none' }} onClick={onClick}>
                 <Frame
                     sx={{
                         display: 'flex',
@@ -41,12 +42,17 @@ const NavigationTab: FunctionComponent<NavigationTabProperties> = ({
                         backgroundColor:
                             href === router.pathname
                                 ? theme.palette.background.level2
-                                : isHovering
-                                ? theme.palette.background.level1
                                 : theme.palette.background.body
                     }}
-                    onHoverStart={(): void => setIsHovering(true)}
-                    onHoverEnd={(): void => setIsHovering(false)}
+                    whileHover={{
+                        backgroundColor:
+                            href === router.pathname
+                                ? theme.palette.background.level2
+                                : theme.palette.background.level1
+                    }}
+                    whileTap={{
+                        backgroundColor: theme.palette.background.level2
+                    }}
                 >
                     <Typography fontWeight='lg'>{title}</Typography>
                 </Frame>
