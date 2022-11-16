@@ -12,6 +12,7 @@ export interface Listing {
 }
 
 interface Nft {
+    symbol: string
     address: string
     id: string
     tokenUri: string
@@ -63,7 +64,7 @@ export async function getHydratedListing(listing: Listing): Promise<Listing> {
     )
     let metadata = TokenMetadata.parse(response.data)
     let hydratedListing = produce(listing, (draft) => {
-        draft.nft.displayName = `#${listing.nft.id}`
+        draft.nft.displayName = `${listing.nft.symbol} #${listing.nft.id}`
         draft.nft.metadata = metadata
         draft.nft.imageUrl = metadata.image.replace(
             IPFS_PROTOCOL_URL_PREFIX,
@@ -76,6 +77,7 @@ export async function getHydratedListing(listing: Listing): Promise<Listing> {
 
 let dummyListing = {
     nft: {
+        symbol: 'DOGS',
         address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
         id: '0',
         tokenUri:

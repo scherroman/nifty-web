@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useContractWrite } from 'wagmi'
 
 import { Listing, getHydratedListings, dummyListings } from '../models/listing'
-import { NiftyContext } from '../shared/contexts'
+import { ContractsContext } from '../shared/contexts'
 import { useIsMounted, useNotify } from '../shared/hooks'
 
 import { NextPage } from 'next'
@@ -14,7 +14,7 @@ import { ErrorMessage, ListingCard } from '../components/widgets'
 import { MINIMUM_LISTING_CARD_WIDTH } from '../components/widgets/ListingCard'
 
 const Home: NextPage = () => {
-    let nifty = useContext(NiftyContext)
+    let { nifty } = useContext(ContractsContext)
     let notify = useNotify()
     let isMounted = useIsMounted()
     let [buyingListing, setBuyingListing] = useState<Listing | null>(null)

@@ -15,9 +15,9 @@ import { CssVarsProvider, extendTheme } from '@mui/joy/styles'
 import CssBaseline from '@mui/joy/CssBaseline'
 import { MotionConfig } from 'framer-motion'
 
-import { NiftyContext } from '../shared/contexts'
+import { ContractsContext } from '../shared/contexts'
 import { NotificationProvider } from '../shared/hooks/useNotify'
-import NIFTY from '../contracts/nifty'
+import { NIFTY, IERC721 } from '../contracts'
 
 import { Layout } from '../components/layouts'
 
@@ -54,8 +54,8 @@ interface ZindexOptions {
     drawer: number
     modalBackdrop: number
     modal: number
-    snackbar: number
     tooltip: number
+    notification: number
 }
 
 declare module '@mui/joy/styles' {
@@ -102,8 +102,8 @@ let theme = extendTheme({
         drawer: 11,
         modalBackdrop: 12,
         modal: 13,
-        snackbar: 14,
-        tooltip: 15
+        tooltip: 14,
+        notification: 15
     }
 })
 
@@ -113,24 +113,30 @@ const App: FunctionComponent<AppProps> = ({
 }: AppProps) => {
     let { chain } = useNetwork()
     let chainId = chain?.id ?? ''
-    let address = chainId in NIFTY.addresses ? NIFTY.addresses[chainId] : ''
-    let [nifty, setNifty] = useState({
-        address,
-        abi: NIFTY.abi
+    let niftyAddress =
+        chainId in NIFTY.addresses ? NIFTY.addresses[chainId] : ''
+    let [contracts, setContracts] = useState({
+        nifty: {
+            address: niftyAddress,
+            abi: NIFTY.abi
+        },
+        ierc721: {
+            abi: IERC721.abi
+        }
     })
 
     useEffect(() => {
-        setNifty(
+        setContracts(
             produce((draft) => {
-                draft.address = address
+                draft.nifty.address = niftyAddress
             })
         )
-    }, [address])
+    }, [niftyAddress])
 
     return (
         <QueryClientProvider client={queryClient}>
             <WagmiConfig client={client}>
-                <NiftyContext.Provider value={nifty}>
+                <ContractsContext.Provider value={contracts}>
                     <CssVarsProvider theme={theme}>
                         <CssBaseline />
                         <MotionConfig
@@ -143,7 +149,7 @@ const App: FunctionComponent<AppProps> = ({
                             </NotificationProvider>
                         </MotionConfig>
                     </CssVarsProvider>
-                </NiftyContext.Provider>
+                </ContractsContext.Provider>
             </WagmiConfig>
         </QueryClientProvider>
     )

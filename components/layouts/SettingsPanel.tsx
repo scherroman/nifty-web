@@ -33,29 +33,18 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
     return (
         <Fragment>
             <Frame
-                sx={{
-                    position: 'fixed',
-                    top: 0,
-                    right: 0,
-                    width: '100%',
-                    height: '100%',
-                    bgcolor: 'background.backdrop',
-                    backdropFilter: 'blur(8px)',
-                    zIndex: 'drawerBackdrop'
-                }}
-            />
-            <Frame
                 variant='outlined'
                 color='neutral'
                 sx={{
                     position: 'absolute',
                     top: 0,
                     right: 0,
-                    height: '100%',
+                    bottom: 0,
                     width: `${SETTINGS_PANEL_WIDTH}px`,
                     borderRight: 0,
                     borderTop: 0,
                     borderBottom: 0,
+                    backgroundColor: 'body',
                     zIndex: 'drawer'
                 }}
                 initial={{ x: SETTINGS_PANEL_WIDTH }}
@@ -95,6 +84,18 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
                     />
                 </Stack>
             </Frame>
+            <Frame
+                sx={{
+                    position: 'fixed',
+                    top: 0,
+                    right: 0,
+                    bottom: 0,
+                    left: 0,
+                    bgcolor: 'background.backdrop',
+                    backdropFilter: 'blur(8px)',
+                    zIndex: 'drawerBackdrop'
+                }}
+            />
         </Fragment>
     )
 }

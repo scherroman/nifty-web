@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { NextPage } from 'next'
 import { useQuery } from '@tanstack/react-query'
 import { useAccount } from 'wagmi'
+import { useToggle } from 'react-use'
 
 import { Listing, dummyListings, getHydratedListings } from '../models/listing'
 import { useIsMounted } from '../shared/hooks'
@@ -12,12 +13,13 @@ import { Typography, Button } from '@mui/joy'
 import { Frame, CircularLoader } from '../components/atoms'
 import { ErrorMessage, ListingCard } from '../components/widgets'
 import { MINIMUM_LISTING_CARD_WIDTH } from '../components/widgets/ListingCard'
-import { UpdateListingModal } from '../components/layouts'
+import { UpdateListingModal, CreateListingModal } from '../components/layouts'
 
 const SellPage: NextPage = () => {
     let isMounted = useIsMounted()
     let { address } = useAccount()
     let [updatingListing, setUpdatingListing] = useState<Listing | null>(null)
+    let [isCreatingListing, toggleIsCreatingListing] = useToggle(false)
 
     let ownedListings = dummyListings.filter(
         (listing) => listing.seller === address
@@ -70,7 +72,10 @@ const SellPage: NextPage = () => {
                                 ? 'Your listings'
                                 : 'No listings'}
                         </Typography>
-                        <Button startDecorator={<SellIcon />}>
+                        <Button
+                            startDecorator={<SellIcon />}
+                            onClick={toggleIsCreatingListing}
+                        >
                             Create listing
                         </Button>
                     </Frame>
@@ -97,12 +102,18 @@ const SellPage: NextPage = () => {
                     {updatingListing && (
                         <UpdateListingModal
                             listing={updatingListing}
-                            onClose={(): void => {
-                                setUpdatingListing(null)
-                            }}
                             onSave={(): void => {
                                 setUpdatingListing(null)
                             }}
+                            onClose={(): void => {
+                                setUpdatingListing(null)
+                            }}
+                        />
+                    )}
+                    {isCreatingListing && (
+                        <CreateListingModal
+                            onList={toggleIsCreatingListing}
+                            onClose={toggleIsCreatingListing}
                         />
                     )}
                 </Frame>

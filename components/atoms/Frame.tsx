@@ -6,9 +6,14 @@ import { motion, HTMLMotionProps } from 'framer-motion'
 type FrameProperties = SheetProps & HTMLMotionProps<'div'>
 
 const Frame = forwardRef<HTMLDivElement, FrameProperties>(
-    ({ children, ...properties }: FrameProperties, ref) => {
+    ({ children, sx, ...properties }: FrameProperties, ref) => {
         return (
-            <Sheet component={motion.div} {...properties} ref={ref}>
+            <Sheet
+                component={motion.div}
+                sx={{ backgroundColor: 'transparent', ...sx }}
+                {...properties}
+                ref={ref}
+            >
                 {children}
             </Sheet>
         )

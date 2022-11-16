@@ -10,6 +10,8 @@ import {
 import { useClickAway } from 'react-use'
 import { AnimatePresence } from 'framer-motion'
 
+import { sleep } from '../utilities/general'
+
 import { Alert, IconButton } from '@mui/joy'
 import InfoIcon from '@mui/icons-material/Info'
 import WarningIcon from '@mui/icons-material/Warning'
@@ -19,6 +21,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 
 import { Frame } from '../../components/atoms'
 
+const ANIMATION_DURATION_IN_MILLISECONDS = 300
 const SLIDE_ANIMATION_DISTANCE = 50
 
 export function useNotify(): ({ message, type }: NotifyArguments) => void {
@@ -74,42 +77,59 @@ export const NotificationProvider: FunctionComponent<
     NotificationProviderProperties
 > = ({ children }: NotificationProviderProperties) => {
     let ref = useRef(null)
-    let [isClosed, setIsClosed] = useState(false)
+    let [isOpen, _setIsOpen] = useState(false)
+    let isOpenRef = useRef(isOpen)
     let [notification, setNotification] = useState<Notification | undefined>()
+
+    let setIsOpen = useCallback((value: boolean) => {
+        _setIsOpen(value)
+        isOpenRef.current = value
+    }, [])
+
     useClickAway(
         ref,
         () => {
-            setIsClosed(true)
+            setIsOpen(false)
         },
         ['mouseup']
     )
 
-    let notify = useCallback(({ message, type = 'info' }: NotifyArguments) => {
-        let configuration = NOTIFICATION_TYPES_CONFIGURATION[type]
-        setNotification({
-            message,
-            type,
-            color: configuration.color,
-            icon: configuration.icon
-        })
-        setIsClosed(false)
-    }, [])
+    let notify = useCallback(
+        async ({ message, type = 'info' }: NotifyArguments) => {
+            let configuration = NOTIFICATION_TYPES_CONFIGURATION[type]
+
+            if (isOpenRef.current) {
+                setIsOpen(false)
+                await sleep(ANIMATION_DURATION_IN_MILLISECONDS)
+            }
+            setNotification({
+                message,
+                type,
+                color: configuration.color,
+                icon: configuration.icon
+            })
+            setIsOpen(true)
+        },
+        [setIsOpen]
+    )
 
     return (
         <NotificationContext.Provider value={{ notify }}>
             {children}
             <AnimatePresence>
-                {notification && !isClosed && (
+                {notification && isOpen && (
                     <Frame
                         initial={{ x: SLIDE_ANIMATION_DISTANCE, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         exit={{ x: SLIDE_ANIMATION_DISTANCE, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{
+                            duration: ANIMATION_DURATION_IN_MILLISECONDS / 1000
+                        }}
                         sx={{
                             position: 'absolute',
                             top: (theme) => theme.spacing(1),
                             right: (theme) => theme.spacing(1),
-                            zIndex: 'snackbar'
+                            zIndex: 'notification'
                         }}
                     >
                         <Alert
@@ -121,7 +141,7 @@ export const NotificationProvider: FunctionComponent<
                                     size='sm'
                                     color={notification.color}
                                     onClick={(): void => {
-                                        setIsClosed(true)
+                                        setIsOpen(false)
                                     }}
                                 >
                                     <CloseRoundedIcon />
