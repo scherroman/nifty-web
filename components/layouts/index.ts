@@ -1,6 +1,7 @@
+export { default as Grid } from './Grid'
+export { default as Modal } from './Modal'
 export { default as Header } from './Header'
 export { default as Layout } from './Layout'
 export { default as SettingsPanel } from './SettingsPanel'
-export { default as Modal } from './Modal'
 export { default as UpdateListingModal } from './UpdateListingModal'
 export { default as CreateListingModal } from './CreateListingModal'

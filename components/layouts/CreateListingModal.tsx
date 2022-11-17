@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 import zod from 'zod'
 import { ethers } from 'ethers'
 import { FunctionComponent, useCallback } from 'react'
@@ -13,7 +13,6 @@ import { useNotify } from '../../shared/hooks'
 import { Typography, TextField, Button } from '@mui/joy'
 
 import { Frame } from '../atoms'
-import { ErrorMessage } from '../widgets'
 import { Modal } from '../layouts'
 
 const CreateListingInput = zod.object({

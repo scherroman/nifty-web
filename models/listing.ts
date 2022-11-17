@@ -1,13 +1,14 @@
 import zod from 'zod'
 import axios from 'axios'
 import { produce } from 'immer'
+import { BigNumber } from 'ethers'
 
 const IPFS_PROTOCOL_URL_PREFIX = 'ipfs://'
 const IPFS_GATEWAY_URL_PREFIX = 'https://ipfs.io/ipfs/'
 
 export interface Listing {
     nft: Nft
-    price: string
+    price: BigNumber
     seller: string
 }
 
@@ -83,7 +84,7 @@ let dummyListing = {
         tokenUri:
             'ipfs://bafybeig37ioir76s7mg5oobetncojcm3c3hxasyd4rvid4jqhy4gkaheg4/?filename=0-PUG.json'
     },
-    price: '120000000000000000',
+    price: BigNumber.from('120000000000000000'),
     seller: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 }
 
@@ -95,7 +96,7 @@ export let dummyListings: Listing[] = [
             ...dummyListing.nft,
             id: '1'
         },
-        price: '220000000000000000'
+        price: BigNumber.from('220000000000000000')
     },
     {
         ...dummyListing,
@@ -103,6 +104,6 @@ export let dummyListings: Listing[] = [
             ...dummyListing.nft,
             id: '2'
         },
-        price: '320000000000000000'
+        price: BigNumber.from('320000000000000000')
     }
 ]

@@ -6,9 +6,10 @@ import { Listing } from '../../models/listing'
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { AspectRatio, Card, CardOverflow, Typography, Button } from '@mui/joy'
+import { AspectRatio, CardOverflow, Typography, Button } from '@mui/joy'
 
 import { Frame } from '../atoms'
+import { Card } from '../widgets'
 
 export const MINIMUM_LISTING_CARD_WIDTH = '200px'
 
@@ -18,8 +19,8 @@ interface ListingCardProperties {
     isBuyable?: boolean
     isUpdatable?: boolean
     isLoading?: boolean
-    onButtonClick?: () => void
     sx?: SxProps
+    onButtonClick?: () => void
 }
 
 const ListingCard: FunctionComponent<ListingCardProperties> = ({
@@ -28,8 +29,8 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
     isBuyable = false,
     isUpdatable = false,
     isLoading = false,
-    onButtonClick = (): void => void 0,
-    sx
+    sx,
+    onButtonClick = (): void => void 0
 }: ListingCardProperties) => {
     let { nft, price } = listing
     let { imageUrl } = nft
@@ -37,13 +38,13 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
     return (
         <Link href={href ?? ''}>
             <Card
-                variant='outlined'
                 sx={{
                     cursor: href ? 'pointer' : 'default',
-                    '&:hover': {
-                        boxShadow: 'md',
-                        borderColor: 'neutral.outlinedHoverBorder'
-                    },
+                    ...(href && {
+                        '&:hover': {
+                            borderColor: 'neutral.outlinedHoverBorder'
+                        }
+                    }),
                     ...sx
                 }}
             >

@@ -1,4 +1,4 @@
-import { Fragment, useState, useContext } from 'react'
+import { useState, useContext } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useContractWrite } from 'wagmi'
 
@@ -60,54 +60,50 @@ const Home: NextPage = () => {
     let isLoading = isLoadingListings
     let didError = didLoadingListingsError
 
-    if (isLoading) {
+    if (!isMounted || isLoading) {
         return <CircularLoader />
     }
 
-    if (didError) {
+    if (didError || !listings) {
         return <ErrorMessage onClose={refetchListings} />
     }
 
     return (
-        <Fragment>
-            {isMounted && listings && (
-                <Fragment>
-                    <Typography level='h3' fontWeight='lg'>
-                        All listings
-                    </Typography>
-                    <Frame
-                        sx={{
-                            display: 'grid',
-                            gap: (theme) => theme.spacing(2),
-                            gridTemplateColumns: `repeat(auto-fill, minmax(${MINIMUM_LISTING_CARD_WIDTH}, auto))`,
-                            marginTop: 2
+        <Frame>
+            <Typography level='h3' fontWeight='lg'>
+                All listings
+            </Typography>
+            <Frame
+                sx={{
+                    display: 'grid',
+                    gap: (theme) => theme.spacing(2),
+                    gridTemplateColumns: `repeat(auto-fill, minmax(${MINIMUM_LISTING_CARD_WIDTH}, auto))`,
+                    marginTop: 2
+                }}
+            >
+                {listings.map((listing) => (
+                    <ListingCard
+                        listing={listing}
+                        // href={`/explore?address=${listing.nft.address}&id=${listing.nft.id}`}
+                        isBuyable
+                        isLoading={listing === buyingListing}
+                        onButtonClick={(): void => {
+                            setBuyingListing(listing)
+                            buyNft?.({
+                                recklesslySetUnpreparedArgs: [
+                                    listing.nft.address,
+                                    listing.nft.id
+                                ],
+                                recklesslySetUnpreparedOverrides: {
+                                    value: listing.price
+                                }
+                            })
                         }}
-                    >
-                        {listings.map((listing) => (
-                            <ListingCard
-                                listing={listing}
-                                // href={`/explore?address=${listing.nft.address}&id=${listing.nft.id}`}
-                                isBuyable
-                                isLoading={listing === buyingListing}
-                                onButtonClick={(): void => {
-                                    setBuyingListing(listing)
-                                    buyNft?.({
-                                        recklesslySetUnpreparedArgs: [
-                                            listing.nft.address,
-                                            listing.nft.id
-                                        ],
-                                        recklesslySetUnpreparedOverrides: {
-                                            value: listing.price
-                                        }
-                                    })
-                                }}
-                                key={`${listing.nft.address}-${listing.nft.id}`}
-                            />
-                        ))}
-                    </Frame>
-                </Fragment>
-            )}
-        </Fragment>
+                        key={`${listing.nft.address}-${listing.nft.id}`}
+                    />
+                ))}
+            </Frame>
+        </Frame>
     )
 }
 

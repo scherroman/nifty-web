@@ -78,7 +78,10 @@ const UpdateListingModal: FunctionComponent<UpdateListingModalProperties> = ({
     )
 
     return (
-        <Modal title={`Update listing #${listing.nft.id}`} onClose={onClose}>
+        <Modal
+            title={`Update listing ${listing.nft.displayName}`}
+            onClose={onClose}
+        >
             <TextField
                 {...register('price', {
                     valueAsNumber: true,

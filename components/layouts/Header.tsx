@@ -88,6 +88,7 @@ const Header: FunctionComponent<HeaderProperties> = ({
                 borderLeft: 0,
                 borderRight: 0,
                 borderTop: 0,
+                bgcolor: 'background.body',
                 zIndex: 'navbar',
                 ...sx
             }}
@@ -240,13 +241,13 @@ const Header: FunctionComponent<HeaderProperties> = ({
 }
 
 interface NavigationTabsProperties {
-    onSelect: () => void
     sx?: SxProps
+    onSelect?: () => void
 }
 
 const NavigationTabs: FunctionComponent<NavigationTabsProperties> = ({
-    onSelect,
-    sx
+    sx,
+    onSelect = (): void => void 0
 }: NavigationTabsProperties) => {
     return (
         <Stack
