@@ -52,7 +52,10 @@ const Layout: FunctionComponent<LayoutProperties> = ({ children }) => {
         >
             <Head>
                 <title>Nifty</title>
-                <meta name='description' content='A nifty NFT marketplace' />
+                <meta
+                    name='description'
+                    content='A nifty marketplace for NFTs'
+                />
                 <meta
                     name='viewport'
                     content='initial-scale=1, width=device-width'

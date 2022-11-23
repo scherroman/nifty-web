@@ -101,7 +101,7 @@ const SellPage: NextPage = () => {
 
     return (
         <Frame>
-            <Grid minimumItemWidth='160px' spacing={2}>
+            <Grid minimumItemWidth='200px' spacing={2}>
                 <Card>
                     <Typography level='h6'>Proceeds</Typography>
                     <Typography level='h4' fontWeight='lg'>

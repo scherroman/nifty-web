@@ -79,13 +79,13 @@ export async function getHydratedListing(listing: Listing): Promise<Listing> {
 let dummyListing = {
     nft: {
         symbol: 'DOGS',
-        address: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+        address: '0x226b417091746412857055Cd933d07A04C87FE10',
         id: '0',
         tokenUri:
             'ipfs://bafybeig37ioir76s7mg5oobetncojcm3c3hxasyd4rvid4jqhy4gkaheg4/?filename=0-PUG.json'
     },
-    price: BigNumber.from('120000000000000000'),
-    seller: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+    price: BigNumber.from('10000000000000000'),
+    seller: '0xEac8221b3457884717B256C44f7E48Ec1dad1d3F'
 }
 
 export let dummyListings: Listing[] = [
@@ -96,7 +96,7 @@ export let dummyListings: Listing[] = [
             ...dummyListing.nft,
             id: '1'
         },
-        price: BigNumber.from('220000000000000000')
+        price: BigNumber.from('20000000000000000')
     },
     {
         ...dummyListing,
@@ -104,6 +104,6 @@ export let dummyListings: Listing[] = [
             ...dummyListing.nft,
             id: '2'
         },
-        price: BigNumber.from('320000000000000000')
+        price: BigNumber.from('30000000000000000')
     }
 ]

@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Nifty-Web
+
+Built with React, Next.js, Wagmi, and The Graph
 
 ## Getting Started
 
@@ -22,7 +24,7 @@ Currency Symbol: ETH
 
 ## Notes
 
-The [Frame](./components/Frame.tsx) component is a generic base component that combines Framer Motion's [motion.div](https://www.framer.com/docs/component/) with Joy UI's generic [`Sheet`](https://mui.com/joy-ui/react-sheet/), so that any location that uses it instead of a `div`, `motion.div`, `Box`, or `Sheet` can easily use both theme values and animatations.
+The [Frame](./components/Frame.tsx) component is a generic base component that combines Joy UI's generic [`Sheet`](https://mui.com/joy-ui/react-sheet/) with Framer Motion's [motion.div](https://www.framer.com/docs/component/), so that any location that uses it instead of a `div`, `motion.div`, `Box`, or `Sheet` can easily use both theme values and animatations.
 
 ## Troubleshooting
 
