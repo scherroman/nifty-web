@@ -29,6 +29,22 @@ export function useNotify(): ({ message, type }: NotifyArguments) => void {
     return notify
 }
 
+export function getNotifications(action: string): {
+    succeeded: NotifyArguments
+    failed: NotifyArguments
+} {
+    return {
+        succeeded: {
+            message: `${action} successful`,
+            type: 'success'
+        },
+        failed: {
+            message: `${action} failed`,
+            type: 'error'
+        }
+    }
+}
+
 interface Notification {
     message: string
     type: 'info' | 'success' | 'warning' | 'error'
@@ -126,7 +142,7 @@ export const NotificationProvider: FunctionComponent<
                             duration: ANIMATION_DURATION_IN_MILLISECONDS / 1000
                         }}
                         sx={{
-                            position: 'absolute',
+                            position: 'fixed',
                             top: (theme) => theme.spacing(1),
                             right: (theme) => theme.spacing(1),
                             zIndex: 'notification'

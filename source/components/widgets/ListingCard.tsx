@@ -1,3 +1,4 @@
+import { Fragment, ReactNode } from 'react'
 import { ethers } from 'ethers'
 import { FunctionComponent } from 'react'
 import { SxProps } from '@mui/joy/styles/types'
@@ -9,9 +10,31 @@ import Image from 'next/image'
 import { AspectRatio, CardOverflow, Typography, Button } from '@mui/joy'
 
 import { Frame } from '../atoms'
-import { Card } from '../widgets'
+import { Card } from '.'
 
 export const MINIMUM_LISTING_CARD_WIDTH = '200px'
+
+interface ConditionalLinkProperties {
+    href?: string
+    children: ReactNode
+}
+
+const ConditionalLink: FunctionComponent<ConditionalLinkProperties> = ({
+    href,
+    children
+}: ConditionalLinkProperties) => {
+    return (
+        <Fragment>
+            {href ? (
+                <Link href={href}>
+                    <a style={{ textDecoration: 'none' }}>{children}</a>
+                </Link>
+            ) : (
+                children
+            )}
+        </Fragment>
+    )
+}
 
 interface ListingCardProperties {
     listing: Listing
@@ -36,7 +59,7 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
     let { imageUrl } = nft
 
     return (
-        <Link href={href ?? ''}>
+        <ConditionalLink href={href}>
             <Card
                 sx={{
                     cursor: href ? 'pointer' : 'default',
@@ -61,7 +84,11 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
                     )}
                 </CardOverflow>
                 <Frame sx={{ marginTop: 2 }}>
-                    <Typography level='body1'>
+                    <Typography
+                        level='body1'
+                        overflow='hidden'
+                        textOverflow='ellipsis'
+                    >
                         {listing.nft.displayName}
                     </Typography>
                     {(isBuyable || isUpdatable) && (
@@ -93,7 +120,7 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
                     </Typography>
                 </Frame>
             </Card>
-        </Link>
+        </ConditionalLink>
     )
 }
 

@@ -1,5 +1,5 @@
 import abi from './abi'
 
-const IERC721 = { abi }
+const ERC721_INTERFACE = { abi }
 
-export default IERC721
+export default ERC721_INTERFACE

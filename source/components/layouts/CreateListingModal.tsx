@@ -9,11 +9,16 @@ import isEthereumAddress from 'validator/lib/isEthereumAddress'
 
 import { ContractsContext } from '../../shared/contexts'
 import { useNotify } from '../../shared/hooks'
+import { getNotifications } from '../../shared/hooks/useNotify'
+import { TRANSACTION_FAILED_STATUS } from '../../shared/constants'
 
 import { Typography, TextField, Button } from '@mui/joy'
 
 import { Frame } from '../atoms'
-import { Modal } from '../layouts'
+import Modal from './Modal'
+
+const APPROVAL_NOTIFICATIONS = getNotifications('Approval')
+const LISTING_NOTIFICATIONS = getNotifications('Listing')
 
 const CreateListingInput = zod.object({
     nftAddress: zod.string().refine((value) => isEthereumAddress(value), {
@@ -34,7 +39,7 @@ const CreateListingModal: FunctionComponent<CreateListingModalProperties> = ({
     onClose,
     onList = (): void => void 0
 }: CreateListingModalProperties) => {
-    let { nifty, ierc721 } = useContext(ContractsContext)
+    let { nifty, erc721Interface } = useContext(ContractsContext)
     let notify = useNotify()
     let {
         register,
@@ -51,18 +56,22 @@ const CreateListingModal: FunctionComponent<CreateListingModalProperties> = ({
         useContractWrite({
             mode: 'recklesslyUnprepared',
             address: nftAddress,
-            abi: ierc721.abi,
+            abi: erc721Interface.abi,
             functionName: 'approve',
             onError(error) {
                 console.log(error)
                 if (!error.message.includes('ACTION_REJECTED')) {
-                    notify({ message: 'Approval failed', type: 'error' })
+                    notify(APPROVAL_NOTIFICATIONS.failed)
                 }
             },
             async onSuccess(transaction) {
-                await transaction.wait(1)
-                notify({ message: 'Approval successful', type: 'success' })
-                await handleSubmit(onApproveSuccess)()
+                let receipt = await transaction.wait()
+                if (receipt.status === TRANSACTION_FAILED_STATUS) {
+                    notify(APPROVAL_NOTIFICATIONS.failed)
+                } else {
+                    notify(APPROVAL_NOTIFICATIONS.succeeded)
+                    await handleSubmit(onApproveSuccess)()
+                }
             }
         })
 
@@ -74,13 +83,17 @@ const CreateListingModal: FunctionComponent<CreateListingModalProperties> = ({
         onError(error) {
             console.log(error)
             if (!error.message.includes('ACTION_REJECTED')) {
-                notify({ message: 'Listing failed', type: 'error' })
+                notify(LISTING_NOTIFICATIONS.failed)
             }
         },
         async onSuccess(transaction) {
-            await transaction.wait(1)
-            notify({ message: 'Listing successful', type: 'success' })
-            onList()
+            let receipt = await transaction.wait()
+            if (receipt.status === TRANSACTION_FAILED_STATUS) {
+                notify(LISTING_NOTIFICATIONS.failed)
+            } else {
+                notify(LISTING_NOTIFICATIONS.succeeded)
+                onList()
+            }
         }
     })
 

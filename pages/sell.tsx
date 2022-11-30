@@ -1,31 +1,50 @@
-import { useState, useContext } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import type { NextPage } from 'next'
-import { useQuery } from '@tanstack/react-query'
-import { useAccount, useContractRead, useContractWrite } from 'wagmi'
+import { useQuery } from '@apollo/client'
+import { useQuery as useRestQuery } from '@tanstack/react-query'
+import { useAccount, useContractRead } from 'wagmi'
 import { useToggle } from 'react-use'
-import { ethers, BigNumber } from 'ethers'
+import { BigNumber } from 'ethers'
+import { graphql } from '../subgraph/types/gql'
 
-import { Listing, dummyListings, getHydratedListings } from '../models/listing'
-import { useIsMounted, useNotify } from '../shared/hooks'
+import { Listing, getHydratedListings } from '../source/models/listing'
+import { useIsMounted } from '../source/shared/hooks'
+import { ContractsContext } from '../source/shared/contexts'
+import { ETHEREUM_BLOCK_TIME_MILLISECONDS } from '../source/shared/constants'
 
 import AddIcon from '@mui/icons-material/Add'
 import { Typography, Button } from '@mui/joy'
 
-import { ContractsContext } from '../shared/contexts'
-
-import { Frame, CircularLoader } from '../components/atoms'
-import { ErrorMessage, Card, ListingCard } from '../components/widgets'
-import { MINIMUM_LISTING_CARD_WIDTH } from '../components/widgets/ListingCard'
+import { Frame, CircularLoader } from '../source/components/atoms'
+import {
+    ErrorMessage,
+    ListingCard,
+    ProceedsCard
+} from '../source/components/widgets'
+import { MINIMUM_LISTING_CARD_WIDTH } from '../source/components/widgets/ListingCard'
 import {
     Grid,
     UpdateListingModal,
     CreateListingModal
-} from '../components/layouts'
+} from '../source/components/layouts'
+
+const USER_LISTINGS = graphql(`
+    query getUserListings($seller: Bytes!) {
+        listings(first: 100, orderBy: createdAt, where: { seller: $seller }) {
+            id
+            nft {
+                id
+                address
+                tokenId
+            }
+            price
+        }
+    }
+`)
 
 const SellPage: NextPage = () => {
-    let { nifty } = useContext(ContractsContext)
+    let { nifty, erc721Interface } = useContext(ContractsContext)
     let isMounted = useIsMounted()
-    let notify = useNotify()
     let { address: userAddress } = useAccount()
     let [updatingListing, setUpdatingListing] = useState<Listing | null>(null)
     let [isCreatingListing, toggleIsCreatingListing] = useToggle(false)
@@ -42,39 +61,28 @@ const SellPage: NextPage = () => {
         watch: true
     })
 
-    let { isLoading: isWithdrawing, write: withdrawProceeds } =
-        useContractWrite({
-            mode: 'recklesslyUnprepared',
-            address: nifty.address,
-            abi: nifty.abi,
-            functionName: 'withdrawProceeds',
-            onError(error) {
-                console.log(error)
-                if (!error.message.includes('ACTION_REJECTED')) {
-                    notify({ message: 'Withdrawal failed', type: 'error' })
-                }
-            },
-            async onSuccess(transaction) {
-                await transaction.wait(1)
-                notify({ message: 'Withdrawal successful', type: 'success' })
-            }
-        })
+    let {
+        data,
+        loading: isLoadingListings,
+        error: loadListingsError,
+        startPolling
+    } = useQuery(USER_LISTINGS, {
+        variables: { seller: userAddress }
+    })
 
-    let ownedListings = dummyListings.filter(
-        (listing) => listing.seller === userAddress
-    )
+    let ownedListings = data?.listings
 
     let {
         data: listings,
-        isLoading: isLoadingListings,
-        isError: didLoadingListingsError,
+        isLoading: isHydratingListings,
+        isError: didHydratingListingsError,
         refetch: _refetchListings,
         remove: clearListings
-    } = useQuery({
-        queryKey: [{ name: 'listings', listings: ownedListings }],
+    } = useRestQuery({
+        queryKey: [{ name: 'userListings', listings: ownedListings }],
         queryFn: async ({ queryKey }) => {
             let { listings } = queryKey[0]
-            return getHydratedListings(listings)
+            return getHydratedListings({ listings, erc721Interface })
         }
     })
 
@@ -83,40 +91,34 @@ const SellPage: NextPage = () => {
         await _refetchListings()
     }
 
+    useEffect(() => {
+        startPolling(ETHEREUM_BLOCK_TIME_MILLISECONDS)
+    }, [startPolling])
+
     let proceeds: BigNumber | undefined
     if (BigNumber.isBigNumber(_proceeds)) {
         proceeds = _proceeds
     }
 
-    let isLoading = isLoadingProceeds || isLoadingListings
-    let didError = didLoadingProceedsError || didLoadingListingsError
+    let isLoading =
+        isLoadingProceeds || isLoadingListings || isHydratingListings
+    let didError =
+        didLoadingProceedsError ||
+        Boolean(loadListingsError) ||
+        didHydratingListingsError
 
     if (!isMounted || isLoading) {
         return <CircularLoader />
     }
 
-    if (didError || !proceeds || !listings) {
+    if (didError || proceeds === undefined || !listings) {
         return <ErrorMessage onClose={refetchListings} />
     }
 
     return (
         <Frame>
             <Grid minimumItemWidth='200px' spacing={2}>
-                <Card>
-                    <Typography level='h6'>Proceeds</Typography>
-                    <Typography level='h4' fontWeight='lg'>
-                        {ethers.utils.formatEther(proceeds)} ETH
-                    </Typography>
-                    <Button
-                        size='sm'
-                        loading={isWithdrawing}
-                        disabled={proceeds.isZero()}
-                        sx={{ marginTop: 1 }}
-                        onClick={(): void => withdrawProceeds?.()}
-                    >
-                        Withdraw
-                    </Button>
-                </Card>
+                <ProceedsCard proceeds={proceeds} />
             </Grid>
             <Frame>
                 <Frame
@@ -149,20 +151,21 @@ const SellPage: NextPage = () => {
                     {listings.map((listing) => (
                         <ListingCard
                             listing={listing}
-                            // href={`/sell?address=${listing.nft.address}&id=${listing.nft.id}`}
+                            // href={`/sell?address=${listing.nft.address}&id=${listing.nft.tokenId}`}
                             isUpdatable
                             onButtonClick={(): void => {
                                 setUpdatingListing(listing)
                             }}
-                            key={`${listing.nft.address}-${listing.nft.id}`}
+                            key={listing.nft.id}
                         />
                     ))}
                 </Grid>
                 {updatingListing && (
                     <UpdateListingModal
                         listing={updatingListing}
-                        onSave={(): void => {
+                        onSave={async (): Promise<void> => {
                             setUpdatingListing(null)
+                            await refetchListings()
                         }}
                         onClose={(): void => {
                             setUpdatingListing(null)
@@ -171,7 +174,10 @@ const SellPage: NextPage = () => {
                 )}
                 {isCreatingListing && (
                     <CreateListingModal
-                        onList={toggleIsCreatingListing}
+                        onList={async (): Promise<void> => {
+                            toggleIsCreatingListing()
+                            await refetchListings()
+                        }}
                         onClose={toggleIsCreatingListing}
                     />
                 )}

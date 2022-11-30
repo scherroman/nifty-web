@@ -205,7 +205,9 @@ const Header: FunctionComponent<HeaderProperties> = ({
                                     sx={{ marginLeft: 1 }}
                                     onClick={(): void => connect({ connector })}
                                 >
-                                    {isConnecting ? 'Connecting...' : 'Connect'}
+                                    {isConnecting
+                                        ? 'Connecting...'
+                                        : 'Connect wallet'}
                                 </Button>
                             )}
                         </Stack>

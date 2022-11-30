@@ -9,15 +9,38 @@
         "es2020": true,
         "jest/globals": true
     },
-    "plugins": ["@typescript-eslint"],
+    "plugins": [
+        "@typescript-eslint",
+        "react",
+        "react-hooks",
+        "promise",
+        "jest",
+        "testing-library"
+    ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
         "plugin:@typescript-eslint/strict",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
         "plugin:jest/recommended",
+        "plugin:testing-library/react",
         "next/core-web-vitals"
     ],
+    // "overrides": [
+    //     {
+    //         "files": ["*.ts", "*.tsx"],
+    //         "processor": "@graphql-eslint/graphql"
+    //     },
+    //     {
+    //         "files": ["*.graphql"],
+    //         "extends": "plugin:@graphql-eslint/operations-recommended",
+    //         "rules": {
+    //             "@graphql-eslint/require-id-when-available": "error"
+    //         }
+    //     }
+    // ],
     "rules": {
         "prefer-const": "off",
         "@typescript-eslint/no-explicit-any": "error",
@@ -69,6 +92,8 @@
                 "format": ["StrictPascalCase"]
             }
         ],
+        "promise/prefer-await-to-then": ["error"],
+        "promise/prefer-await-to-callbacks": ["error"],
         "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": true }]
     }
 }

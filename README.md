@@ -4,23 +4,81 @@ Built with React, Next.js, Wagmi, and The Graph
 
 ## Getting Started
 
-First, run the development server:
+**1. Install the [GraphQL: Language Feature Support](https://marketplace.visualstudio.com/items?itemName=GraphQL.vscode-graphql) VSCode extension**
 
-```bash
-npm run dev
+**2. Install dependencies**
+
+```
+npm install
 ```
 
-Then, add hardhat as a network in metamask: Open Metamask -> Click the network dropdown in the top middle -> Add network -> Fill out the form -> Save
+**3. Run the development server**
 
-**New Network Details**
+```bash
+npm run develop
+```
 
-Network name: Hardhat Localhost
+**4. Add hardhat as a network in metamask**
 
-New RPC URL: http://127.0.0.1:8545/
+Open Metamask -> Click the network dropdown in the top middle -> Add network -> Fill out the form as shown below -> Save
 
-Chain ID: 31337
+**Hardhat Network Details**
 
-Currency Symbol: ETH
+Network name: **Hardhat Localhost**
+
+New RPC URL: **http://127.0.0.1:8545/**
+
+Chain ID: **31337**
+
+Currency Symbol: **ETH**
+
+## Testing
+
+**Run linter**
+
+```
+npm run lint
+```
+
+**Run typechecker**
+
+```
+npm run typecheck
+```
+
+**Run all static checks**
+
+```
+npm run staticcheck
+```
+
+**Run tests**
+
+```
+npm run test
+```
+
+**Run all checks**
+
+```
+npm run check
+```
+
+## Deployment
+
+**Create a production build**
+
+```
+npm run build
+```
+
+**Serve the production build**
+
+```
+npm run start
+```
+
+See the [Next.js Deployment documentation](https://nextjs.org/docs/deployment) for more information on hosting.
 
 ## Notes
 

@@ -1,15 +1,14 @@
 import { createContext } from 'react'
 
-import NIFTY from '../contracts/nifty'
-import IERC721 from '../contracts/ierc721'
+import { NIFTY, ERC721_INTERFACE } from '../../contracts'
 
-interface ContractsContext {
+export interface ContractsContext {
     nifty: {
         address: string
         abi: typeof NIFTY.abi
     }
-    ierc721: {
-        abi: typeof IERC721.abi
+    erc721Interface: {
+        abi: typeof ERC721_INTERFACE.abi
     }
 }
 
@@ -18,8 +17,8 @@ export const ContractsContext = createContext<ContractsContext>({
         address: '',
         abi: NIFTY.abi
     },
-    ierc721: {
-        abi: IERC721.abi
+    erc721Interface: {
+        abi: ERC721_INTERFACE.abi
     }
 })
 

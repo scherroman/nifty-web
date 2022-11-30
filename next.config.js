@@ -7,13 +7,11 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: 'ipfs.io',
-                port: '',
                 pathname: '/ipfs/**'
             },
             {
                 protocol: 'https',
                 hostname: 'images.unsplash.com',
-                port: '',
                 pathname: '**'
             }
         ]

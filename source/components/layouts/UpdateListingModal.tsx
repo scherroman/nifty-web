@@ -9,11 +9,15 @@ import { useContractWrite } from 'wagmi'
 import { Listing } from '../../models/listing'
 import { ContractsContext } from '../../shared/contexts'
 import { useNotify } from '../../shared/hooks'
+import { getNotifications } from '../../shared/hooks/useNotify'
+import { TRANSACTION_FAILED_STATUS } from '../../shared/constants'
 
 import { Typography, TextField, Button } from '@mui/joy'
 
 import { Frame } from '../atoms'
 import Modal from './Modal'
+
+const UPDATE_NOTIFICATIONS = getNotifications('Update')
 
 const UpdateListingInput = zod.object({
     price: zod.number().positive()
@@ -54,13 +58,17 @@ const UpdateListingModal: FunctionComponent<UpdateListingModalProperties> = ({
         onError(error) {
             console.log(error)
             if (!error.message.includes('ACTION_REJECTED')) {
-                notify({ message: 'Update failed', type: 'error' })
+                notify(UPDATE_NOTIFICATIONS.failed)
             }
         },
         async onSuccess(transaction) {
-            await transaction.wait(1)
-            notify({ message: 'Update successful', type: 'success' })
-            onSave()
+            let receipt = await transaction.wait()
+            if (receipt.status === TRANSACTION_FAILED_STATUS) {
+                notify(UPDATE_NOTIFICATIONS.failed)
+            } else {
+                notify(UPDATE_NOTIFICATIONS.succeeded)
+                onSave()
+            }
         }
     })
 
@@ -69,12 +77,12 @@ const UpdateListingModal: FunctionComponent<UpdateListingModalProperties> = ({
             updateListing?.({
                 recklesslySetUnpreparedArgs: [
                     listing.nft.address,
-                    listing.nft.id,
+                    listing.nft.tokenId,
                     ethers.utils.parseEther(input.price.toString())
                 ]
             })
         },
-        [listing.nft.address, listing.nft.id, updateListing]
+        [listing.nft.address, listing.nft.tokenId, updateListing]
     )
 
     return (
