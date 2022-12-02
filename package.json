@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
+        "prepare": "husky install",
         "introspect:staging": "SUBGRAPH_API_ENDPOINT=$(grep SUBGRAPH_API_ENDPOINT .env.development | cut -d '=' -f2) && mkdir -p ./source/subgraph && graphql-inspector introspect $SUBGRAPH_API_ENDPOINT --write ./source/subgraph/schema.json",
         "generate-types": "graphql-codegen",
         "prepare:staging": "npm run introspect:staging && npm run generate-types",
@@ -61,6 +62,7 @@
         "eslint-plugin-react-hooks": "4.6.0",
         "eslint-plugin-testing-library": "5.9.1",
         "graphql-config": "4.3.6",
+        "husky": "8.0.2",
         "jest": "29.3.1",
         "jest-environment-jsdom": "29.3.1",
         "prettier": "2.7.1",

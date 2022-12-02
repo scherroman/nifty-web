@@ -82,7 +82,23 @@ See the [Next.js Deployment documentation](https://nextjs.org/docs/deployment) f
 
 ## Notes
 
+### Frame Component
+
 The [Frame](./components/Frame.tsx) component is a generic base component that combines Joy UI's generic [`Sheet`](https://mui.com/joy-ui/react-sheet/) with Framer Motion's [motion.div](https://www.framer.com/docs/component/), so that any location that uses it instead of a `div`, `motion.div`, `Box`, or `Sheet` can easily use both theme values and animatations.
+
+### Pre-commit Hooks
+
+All checks are run locally automatically before a commit is made using `npm run check`.
+
+**Modify the existing pre-commit hook**
+
+Edit the [.husky/pre-commit](.husky/pre-commit) file
+
+**Add a pre-commit hook**
+
+`npx husky add .husky/pre-commit "npm run check"`
+
+See the [Husky Documentation](https://typicode.github.io/husky/#/)to learn more on how to configure pre-commit hooks.
 
 ## Troubleshooting
 
