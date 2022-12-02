@@ -1,6 +1,7 @@
-import { produce } from 'immer'
-import { FunctionComponent, useState, useEffect } from 'react'
-import type { AppProps } from 'next/app'
+'use client'
+
+import '@fontsource/public-sans'
+import { ReactNode, FunctionComponent, useState, useEffect } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client'
 import {
@@ -12,15 +13,20 @@ import {
 } from 'wagmi'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { jsonRpcProvider } from 'wagmi/providers/jsonRpc'
-import { CssVarsProvider, extendTheme } from '@mui/joy/styles'
+import {
+    CssVarsProvider,
+    extendTheme,
+    getInitColorSchemeScript
+} from '@mui/joy/styles'
 import CssBaseline from '@mui/joy/CssBaseline'
 import { MotionConfig } from 'framer-motion'
+import { produce } from 'immer'
 
-import { ContractsContext } from '../source/shared/contexts'
-import { NotificationProvider } from '../source/shared/hooks/useNotify'
-import { NIFTY, ERC721_INTERFACE } from '../contracts'
+import { NIFTY, ERC721_INTERFACE } from 'nifty/contracts'
+import { ContractsContext } from 'nifty/contexts'
+import { NotificationProvider } from 'nifty/hooks/useNotify'
 
-import { Layout } from '../source/components/layouts'
+import Dashboard from './Dashboard'
 
 const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
 const SUBGRAPH_API_ENDPOINT = process.env.NEXT_PUBLIC_SUBGRAPH_API_ENDPOINT
@@ -118,10 +124,11 @@ let theme = extendTheme({
     }
 })
 
-const App: FunctionComponent<AppProps> = ({
-    Component,
-    pageProps
-}: AppProps) => {
+interface RootLayoutProperties {
+    children?: ReactNode
+}
+
+const RootLayout: FunctionComponent<RootLayoutProperties> = ({ children }) => {
     let { chain } = useNetwork()
     let chainId = chain?.id ?? ''
     let niftyAddress =
@@ -145,27 +152,33 @@ const App: FunctionComponent<AppProps> = ({
     }, [niftyAddress])
 
     return (
-        <ApolloProvider client={apolloClient}>
-            <QueryClientProvider client={queryClient}>
-                <WagmiConfig client={wagmiClient}>
-                    <ContractsContext.Provider value={contracts}>
-                        <CssVarsProvider theme={theme}>
-                            <CssBaseline />
-                            <MotionConfig
-                                transition={{ type: 'tween', duration: 0.2 }}
-                            >
-                                <NotificationProvider>
-                                    <Layout>
-                                        <Component {...pageProps} />
-                                    </Layout>
-                                </NotificationProvider>
-                            </MotionConfig>
-                        </CssVarsProvider>
-                    </ContractsContext.Provider>
-                </WagmiConfig>
-            </QueryClientProvider>
-        </ApolloProvider>
+        <html lang='en'>
+            <body>
+                {getInitColorSchemeScript()}
+                <ApolloProvider client={apolloClient}>
+                    <QueryClientProvider client={queryClient}>
+                        <WagmiConfig client={wagmiClient}>
+                            <ContractsContext.Provider value={contracts}>
+                                <CssVarsProvider theme={theme}>
+                                    <CssBaseline />
+                                    <MotionConfig
+                                        transition={{
+                                            type: 'tween',
+                                            duration: 0.2
+                                        }}
+                                    >
+                                        <NotificationProvider>
+                                            <Dashboard>{children}</Dashboard>
+                                        </NotificationProvider>
+                                    </MotionConfig>
+                                </CssVarsProvider>
+                            </ContractsContext.Provider>
+                        </WagmiConfig>
+                    </QueryClientProvider>
+                </ApolloProvider>
+            </body>
+        </html>
     )
 }
 
-export default App
+export default RootLayout

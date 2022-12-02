@@ -1,28 +1,27 @@
 import {
+    ReactNode,
+    FunctionComponent,
     useState,
     useContext,
-    useCallback,
-    ReactNode,
-    FunctionComponent
+    useCallback
 } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import { useAccount } from 'wagmi'
-import { useIsMounted } from '../../shared/hooks'
 
-import { ContractsContext } from '../../shared/contexts'
-import { InterfaceContext } from '../../shared/contexts'
+import { ContractsContext, DashboardContext } from 'nifty/contexts'
+import { useIsMounted } from 'nifty/hooks'
 
-import Head from 'next/head'
+import { Frame } from 'nifty/components/atoms'
+import Header, {
+    HEIGHT as HEADER_HEIGHT
+} from 'nifty/components/layouts/Header'
+import SettingsPanel from 'nifty/components/layouts/SettingsPanel'
 
-import { Frame } from '../atoms'
-import Header, { HEIGHT as HEADER_HEIGHT } from './Header'
-import SettingsPanel from './SettingsPanel'
-
-interface LayoutProperties {
+interface DashbaordProperties {
     children?: ReactNode
 }
 
-const Layout: FunctionComponent<LayoutProperties> = ({ children }) => {
+const Dashboard: FunctionComponent<DashbaordProperties> = ({ children }) => {
     let isMounted = useIsMounted()
     let { isConnected } = useAccount()
     let { nifty } = useContext(ContractsContext)
@@ -44,24 +43,12 @@ const Layout: FunctionComponent<LayoutProperties> = ({ children }) => {
     }
 
     return (
-        <InterfaceContext.Provider
+        <DashboardContext.Provider
             value={{
                 openSettingsPanel,
                 closeSettingsPanel
             }}
         >
-            <Head>
-                <title>Nifty</title>
-                <meta
-                    name='description'
-                    content='A nifty marketplace for NFTs'
-                />
-                <meta
-                    name='viewport'
-                    content='initial-scale=1, width=device-width'
-                />
-                <link rel='icon' href='/favicon.ico' />
-            </Head>
             <Header />
             <Frame sx={{ paddingTop: HEADER_HEIGHT }}>
                 {isMounted &&
@@ -87,8 +74,8 @@ const Layout: FunctionComponent<LayoutProperties> = ({ children }) => {
                     />
                 )}
             </AnimatePresence>
-        </InterfaceContext.Provider>
+        </DashboardContext.Provider>
     )
 }
 
-export default Layout
+export default Dashboard

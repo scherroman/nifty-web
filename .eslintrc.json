@@ -9,6 +9,7 @@
         "es2020": true,
         "jest/globals": true
     },
+    "ignorePatterns": ["source/contracts", "source/subgraph"],
     "plugins": [
         "@typescript-eslint",
         "react",

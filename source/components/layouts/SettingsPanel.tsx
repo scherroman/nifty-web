@@ -7,9 +7,9 @@ import { useLockBodyScroll } from 'react-use'
 import CloseIcon from '@mui/icons-material/CloseRounded'
 import { Stack, IconButton, Typography, Switch, FormLabel } from '@mui/joy'
 
-import { Frame } from '../atoms'
+import { Frame } from 'nifty/components/atoms'
 
-const SETTINGS_PANEL_WIDTH = 300
+const WIDTH = 300
 
 interface SettingsPanelProperties {
     onClose(): void
@@ -40,16 +40,16 @@ const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
                     top: 0,
                     right: 0,
                     bottom: 0,
-                    width: `${SETTINGS_PANEL_WIDTH}px`,
+                    width: `${WIDTH}px`,
                     borderRight: 0,
                     borderTop: 0,
                     borderBottom: 0,
                     backgroundColor: 'body',
                     zIndex: 'drawer'
                 }}
-                initial={{ x: SETTINGS_PANEL_WIDTH }}
+                initial={{ x: WIDTH }}
                 animate={{ x: 0 }}
-                exit={{ x: SETTINGS_PANEL_WIDTH }}
+                exit={{ x: WIDTH }}
                 ref={ref}
             >
                 <Frame

@@ -3,13 +3,13 @@ import { ethers } from 'ethers'
 import { FunctionComponent } from 'react'
 import { SxProps } from '@mui/joy/styles/types'
 
-import { Listing } from '../../models/listing'
+import { Listing } from 'nifty/models/listing'
 
 import Link from 'next/link'
 import Image from 'next/image'
 import { AspectRatio, CardOverflow, Typography, Button } from '@mui/joy'
 
-import { Frame } from '../atoms'
+import { Frame } from 'nifty/components/atoms'
 import { Card } from '.'
 
 export const MINIMUM_LISTING_CARD_WIDTH = '200px'
@@ -76,8 +76,8 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
                         <AspectRatio ratio='4/3'>
                             <Image
                                 src={imageUrl}
-                                layout='fill'
-                                objectFit='contain'
+                                fill
+                                style={{ objectFit: 'contain' }}
                                 alt={`nft-id-${nft.id}`}
                             />
                         </AspectRatio>

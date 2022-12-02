@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect, useContext } from 'react'
 import type { NextPage } from 'next'
 import { useQuery } from '@apollo/client'
@@ -5,28 +7,25 @@ import { useQuery as useRestQuery } from '@tanstack/react-query'
 import { useAccount, useContractRead } from 'wagmi'
 import { useToggle } from 'react-use'
 import { BigNumber } from 'ethers'
-import { graphql } from '../subgraph/types/gql'
 
-import { Listing, getHydratedListings } from '../source/models/listing'
-import { useIsMounted } from '../source/shared/hooks'
-import { ContractsContext } from '../source/shared/contexts'
-import { ETHEREUM_BLOCK_TIME_MILLISECONDS } from '../source/shared/constants'
+import { Listing, getHydratedListings } from 'nifty/models/listing'
+import { useIsMounted } from 'nifty/hooks'
+import { ContractsContext } from 'nifty/contexts'
+import { graphql } from 'nifty/subgraph/types/gql'
+import { ETHEREUM_BLOCK_TIME_MILLISECONDS } from 'nifty/constants'
 
 import AddIcon from '@mui/icons-material/Add'
 import { Typography, Button } from '@mui/joy'
 
-import { Frame, CircularLoader } from '../source/components/atoms'
-import {
-    ErrorMessage,
-    ListingCard,
-    ProceedsCard
-} from '../source/components/widgets'
-import { MINIMUM_LISTING_CARD_WIDTH } from '../source/components/widgets/ListingCard'
+import { Frame, CircularLoader } from 'nifty/components/atoms'
+import { ErrorMessage, ListingCard } from 'nifty/components/widgets'
+import { MINIMUM_LISTING_CARD_WIDTH } from 'nifty/components/widgets/ListingCard'
+import ProceedsCard from './ProceedsCard'
 import {
     Grid,
     UpdateListingModal,
     CreateListingModal
-} from '../source/components/layouts'
+} from 'nifty/components/layouts'
 
 const USER_LISTINGS = graphql(`
     query getUserListings($seller: Bytes!) {

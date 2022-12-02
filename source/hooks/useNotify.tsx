@@ -10,7 +10,7 @@ import {
 import { useClickAway } from 'react-use'
 import { AnimatePresence } from 'framer-motion'
 
-import { sleep } from '../utilities/general'
+import { sleep } from 'nifty/utilities'
 
 import { Alert, IconButton } from '@mui/joy'
 import InfoIcon from '@mui/icons-material/Info'
@@ -19,7 +19,7 @@ import ReportIcon from '@mui/icons-material/Report'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 
-import { Frame } from '../../components/atoms'
+import { Frame } from 'nifty/components/atoms'
 
 const ANIMATION_DURATION_IN_MILLISECONDS = 300
 const SLIDE_ANIMATION_DISTANCE = 50

@@ -3,7 +3,7 @@ import axios from 'axios'
 import { BigNumber } from 'ethers'
 import { readContract } from 'wagmi/actions'
 
-import { ContractsContext } from '../shared/contexts'
+import { ContractsContext } from 'nifty/contexts'
 
 const IPFS_PROTOCOL_URL_PREFIX = 'ipfs://'
 const IPFS_GATEWAY_URL_PREFIX = 'https://ipfs.io/ipfs/'

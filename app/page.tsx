@@ -1,24 +1,26 @@
+'use client'
+
 import { useState, useEffect, useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { useQuery as useRestQuery } from '@tanstack/react-query'
 import { useContractWrite } from 'wagmi'
-import { graphql } from '../subgraph/types/gql'
 
-import { Listing, getHydratedListings } from '../source/models/listing'
-import { ContractsContext } from '../source/shared/contexts'
-import { useIsMounted, useNotify } from '../source/shared/hooks'
-import { getNotifications } from '../source/shared/hooks/useNotify'
+import { Listing, getHydratedListings } from 'nifty/models/listing'
+import { ContractsContext } from 'nifty/contexts'
+import { useIsMounted, useNotify } from 'nifty/hooks'
+import { getNotifications } from 'nifty/hooks/useNotify'
+import { graphql } from 'nifty/subgraph/types/gql'
 import {
     ETHEREUM_BLOCK_TIME_MILLISECONDS,
     TRANSACTION_FAILED_STATUS
-} from '../source/shared/constants'
+} from 'nifty/constants'
 
 import { NextPage } from 'next'
 import { Typography } from '@mui/joy'
 
-import { Frame, CircularLoader } from '../source/components/atoms'
-import { ErrorMessage, ListingCard } from '../source/components/widgets'
-import { MINIMUM_LISTING_CARD_WIDTH } from '../source/components/widgets/ListingCard'
+import { Frame, CircularLoader } from 'nifty/components/atoms'
+import { ErrorMessage, ListingCard } from 'nifty/components/widgets'
+import { MINIMUM_LISTING_CARD_WIDTH } from 'nifty/components/widgets/ListingCard'
 
 const PURCHASE_NOTIFICATIONS = getNotifications('Purchase')
 
@@ -36,7 +38,7 @@ const ALL_LISTINGS = graphql(`
     }
 `)
 
-const Home: NextPage = () => {
+const Explore: NextPage = () => {
     let { nifty, erc721Interface } = useContext(ContractsContext)
     let notify = useNotify()
     let isMounted = useIsMounted()
@@ -148,4 +150,4 @@ const Home: NextPage = () => {
     )
 }
 
-export default Home
+export default Explore

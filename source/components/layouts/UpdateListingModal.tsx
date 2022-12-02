@@ -6,15 +6,15 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useContractWrite } from 'wagmi'
 
-import { Listing } from '../../models/listing'
-import { ContractsContext } from '../../shared/contexts'
-import { useNotify } from '../../shared/hooks'
-import { getNotifications } from '../../shared/hooks/useNotify'
-import { TRANSACTION_FAILED_STATUS } from '../../shared/constants'
+import { Listing } from 'nifty/models/listing'
+import { ContractsContext } from 'nifty/contexts'
+import { useNotify } from 'nifty/hooks'
+import { getNotifications } from 'nifty/hooks/useNotify'
+import { TRANSACTION_FAILED_STATUS } from 'nifty/constants'
 
 import { Typography, TextField, Button } from '@mui/joy'
 
-import { Frame } from '../atoms'
+import { Frame } from 'nifty/components/atoms'
 import Modal from './Modal'
 
 const UPDATE_NOTIFICATIONS = getNotifications('Update')

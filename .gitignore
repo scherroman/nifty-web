@@ -1,3 +1,6 @@
+# vscode
+.vscode
+
 # dependencies
 node_modules
 
@@ -28,4 +31,4 @@ npm-debug.log*
 next-env.d.ts
 
 # subgraph
-subgraph
+source/subgraph

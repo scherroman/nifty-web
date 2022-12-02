@@ -1,8 +1,8 @@
 import type { IGraphQLConfig } from 'graphql-config'
 
 const CONFIG: IGraphQLConfig = {
-    schema: './subgraph/schema.json',
-    documents: ['pages/**/*.tsx', 'source/**/*.tsx']
+    schema: 'source/subgraph/schema.json',
+    documents: ['app/**/*.tsx', 'source/**/*.tsx']
 }
 
 export default CONFIG

@@ -1,6 +1,6 @@
 import { createContext } from 'react'
 
-import { NIFTY, ERC721_INTERFACE } from '../../contracts'
+import { NIFTY, ERC721_INTERFACE } from 'nifty/contracts'
 
 export interface ContractsContext {
     nifty: {
@@ -22,12 +22,12 @@ export const ContractsContext = createContext<ContractsContext>({
     }
 })
 
-interface InterfaceContext {
+interface DashboardContext {
     openSettingsPanel: () => void
     closeSettingsPanel: () => void
 }
 
-export const InterfaceContext = createContext<InterfaceContext>({
+export const DashboardContext = createContext<DashboardContext>({
     openSettingsPanel: () => void 0,
     closeSettingsPanel: () => void 0
 })

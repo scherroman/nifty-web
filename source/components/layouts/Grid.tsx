@@ -1,7 +1,7 @@
 import { FunctionComponent, ReactNode } from 'react'
 import { SxProps } from '@mui/joy/styles/types'
 
-import { Frame } from '../atoms'
+import { Frame } from 'nifty/components/atoms'
 
 interface GridProperties {
     minimumItemWidth: string

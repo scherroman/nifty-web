@@ -7,11 +7,11 @@ import {
 } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
-import { InterfaceContext } from '../../shared/contexts'
-import { useIsMounted } from '../../shared/hooks'
+import { DashboardContext } from 'nifty/contexts'
+import { useIsMounted } from 'nifty/hooks'
 import { useToggle } from 'react-use'
-import { SxProps } from '@mui/joy/styles/types'
 
+import { SxProps } from '@mui/joy/styles/types'
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
 import LogoutIcon from '@mui/icons-material/Logout'
@@ -29,9 +29,9 @@ import {
 } from '@mui/joy'
 import Link from 'next/link'
 
-import { Frame, NavigationTab } from '../atoms'
-import { Menu } from '../widgets'
-import { formatAddressForDisplay } from '../../shared/utilities/strings'
+import { Frame, NavigationTab } from 'nifty/components/atoms'
+import { Menu } from 'nifty/components/widgets'
+import { formatAddressForDisplay } from 'nifty/utilities'
 
 export const HEIGHT = '57px'
 const DESKTOP_LEFT_HALF_MARGIN = { mobile: 0, tablet: 0.5 }
@@ -44,7 +44,7 @@ interface HeaderProperties {
 const Header: FunctionComponent<HeaderProperties> = ({
     sx
 }: HeaderProperties) => {
-    let { openSettingsPanel } = useContext(InterfaceContext)
+    let { openSettingsPanel } = useContext(DashboardContext)
     let isMounted = useIsMounted()
     let { address, isConnected, isConnecting } = useAccount()
     let { connect, connectors } = useConnect()
@@ -115,16 +115,14 @@ const Header: FunctionComponent<HeaderProperties> = ({
                     >
                         {isExpanded ? <CloseIcon /> : <MenuIcon />}
                     </IconButton>
-                    <Link href='/'>
-                        <a style={{ textDecoration: 'none' }}>
-                            <Typography
-                                level='h5'
-                                fontWeight='lg'
-                                sx={{ marginLeft: 1 }}
-                            >
-                                Nifty
-                            </Typography>
-                        </a>
+                    <Link href='/' style={{ textDecoration: 'none' }}>
+                        <Typography
+                            level='h5'
+                            fontWeight='lg'
+                            sx={{ marginLeft: 1 }}
+                        >
+                            Nifty
+                        </Typography>
                     </Link>
                     <Divider
                         orientation='vertical'

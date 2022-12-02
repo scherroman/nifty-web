@@ -3,12 +3,14 @@ import { FunctionComponent } from 'react'
 import { ethers, BigNumber } from 'ethers'
 import { useContractWrite } from 'wagmi'
 
-import { ContractsContext } from '../../shared/contexts'
-import { useNotify } from '../../shared/hooks'
-import { getNotifications } from '../../shared/hooks/useNotify'
-import { TRANSACTION_FAILED_STATUS } from '../../shared/constants'
+import { ContractsContext } from 'nifty/contexts'
+import { useNotify } from 'nifty/hooks'
+import { getNotifications } from 'nifty/hooks/useNotify'
+import { TRANSACTION_FAILED_STATUS } from 'nifty/constants'
 
-import { Card, Typography, Button } from '@mui/joy'
+import { Typography, Button } from '@mui/joy'
+
+import { Card } from 'nifty/components/widgets'
 
 const WITHDRAWAL_NOTIFICATIONS = getNotifications('Withdrawal')
 
