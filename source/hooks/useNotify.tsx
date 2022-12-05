@@ -85,13 +85,13 @@ const NOTIFICATION_TYPES_CONFIGURATION: Record<
     }
 }
 
-interface NotificationProviderProperties {
+interface Properties {
     children?: ReactNode
 }
 
-export const NotificationProvider: FunctionComponent<
-    NotificationProviderProperties
-> = ({ children }: NotificationProviderProperties) => {
+export const NotificationProvider: FunctionComponent<Properties> = ({
+    children
+}: Properties) => {
     let ref = useRef(null)
     let [isOpen, _setIsOpen] = useState(false)
     let isOpenRef = useRef(isOpen)

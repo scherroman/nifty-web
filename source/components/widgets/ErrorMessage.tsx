@@ -4,7 +4,7 @@ import ReportIcon from '@mui/icons-material/Report'
 import CloseIcon from '@mui/icons-material/CloseRounded'
 import { Alert, AlertProps, IconButton, Typography } from '@mui/joy'
 
-type ErrorMessageProperties = AlertProps & {
+interface Properties extends AlertProps {
     message?: string
     onClose: () => void
 }
@@ -12,11 +12,11 @@ type ErrorMessageProperties = AlertProps & {
 /**
  * Fixes buggy onClose behavior of regular Joy UI errorMessage, so that it doesn't fire a close event until the click is finished
  */
-const ErrorMessage: FunctionComponent<ErrorMessageProperties> = ({
+const ErrorMessage: FunctionComponent<Properties> = ({
     message = 'Something went wrong',
     onClose = (): void => void 0,
     ...properties
-}: ErrorMessageProperties) => {
+}: Properties) => {
     return (
         <Alert
             variant='soft'

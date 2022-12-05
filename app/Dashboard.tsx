@@ -1,3 +1,5 @@
+'use client'
+
 import {
     ReactNode,
     FunctionComponent,
@@ -17,11 +19,11 @@ import Header, {
 } from 'nifty/components/layouts/Header'
 import SettingsPanel from 'nifty/components/layouts/SettingsPanel'
 
-interface DashbaordProperties {
+interface Properties {
     children?: ReactNode
 }
 
-const Dashboard: FunctionComponent<DashbaordProperties> = ({ children }) => {
+const Dashboard: FunctionComponent<Properties> = ({ children }) => {
     let isMounted = useIsMounted()
     let { isConnected } = useAccount()
     let { nifty } = useContext(ContractsContext)

@@ -1,7 +1,10 @@
+'use client'
+
 import { useContext } from 'react'
 import { FunctionComponent } from 'react'
 import { ethers, BigNumber } from 'ethers'
-import { useContractWrite } from 'wagmi'
+import { useAccount } from 'wagmi'
+import { useContractWrite, useContractRead } from 'wagmi'
 
 import { ContractsContext } from 'nifty/contexts'
 import { useNotify } from 'nifty/hooks'
@@ -10,19 +13,28 @@ import { TRANSACTION_FAILED_STATUS } from 'nifty/constants'
 
 import { Typography, Button } from '@mui/joy'
 
-import { Card } from 'nifty/components/widgets'
+import { CircularLoader } from 'nifty/components/atoms'
+import { Card, ErrorMessage } from 'nifty/components/widgets'
 
 const WITHDRAWAL_NOTIFICATIONS = getNotifications('Withdrawal')
 
-interface ProceedsCardProperties {
-    proceeds: BigNumber
-}
-
-const ProceedsCard: FunctionComponent<ProceedsCardProperties> = ({
-    proceeds
-}: ProceedsCardProperties) => {
+const ProceedsCard: FunctionComponent = () => {
     let { nifty } = useContext(ContractsContext)
+    let { address: userAddress } = useAccount()
     let notify = useNotify()
+
+    let {
+        data: _proceeds,
+        isLoading: isLoadingProceeds,
+        isError: didLoadingProceedsError,
+        refetch
+    } = useContractRead({
+        address: nifty.address,
+        abi: nifty.abi,
+        functionName: 'proceeds',
+        args: [userAddress],
+        watch: true
+    })
 
     let { isLoading: isWithdrawing, write: withdrawProceeds } =
         useContractWrite({
@@ -45,6 +57,22 @@ const ProceedsCard: FunctionComponent<ProceedsCardProperties> = ({
                 }
             }
         })
+
+    let proceeds: BigNumber | undefined
+    if (BigNumber.isBigNumber(_proceeds)) {
+        proceeds = _proceeds
+    }
+
+    let isLoading = isLoadingProceeds
+    let didError = didLoadingProceedsError
+
+    if (isLoading) {
+        return <CircularLoader />
+    }
+
+    if (didError || proceeds === undefined) {
+        return <ErrorMessage onClose={refetch} />
+    }
 
     return (
         <Card>

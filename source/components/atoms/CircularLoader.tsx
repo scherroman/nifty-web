@@ -1,17 +1,19 @@
+'use client'
+
 import { FunctionComponent } from 'react'
 
 import { CircularProgress, CircularProgressProps } from '@mui/joy'
 
 import Frame from './Frame'
 
-type CircularLoaderProperties = CircularProgressProps
+type Properties = CircularProgressProps
 
 /**
  * Circular loader that centers itself within its parent
  */
-const CircularLoader: FunctionComponent<CircularLoaderProperties> = ({
+const CircularLoader: FunctionComponent<Properties> = ({
     ...properties
-}: CircularLoaderProperties) => {
+}: Properties) => {
     return (
         <Frame
             sx={{

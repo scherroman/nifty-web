@@ -25,17 +25,17 @@ const UpdateListingInput = zod.object({
 
 type UpdateListingInput = zod.TypeOf<typeof UpdateListingInput>
 
-interface UpdateListingModalProperties {
+interface Properties {
     listing: Listing
     onClose(): void
     onSave(): void
 }
 
-const UpdateListingModal: FunctionComponent<UpdateListingModalProperties> = ({
+const UpdateListingModal: FunctionComponent<Properties> = ({
     listing,
     onClose,
     onSave
-}: UpdateListingModalProperties) => {
+}: Properties) => {
     let { nifty } = useContext(ContractsContext)
     let notify = useNotify()
     let {

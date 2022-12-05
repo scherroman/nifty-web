@@ -1,12 +1,10 @@
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
-import type { NextPage } from 'next'
+import { useState, useEffect, useContext, FunctionComponent } from 'react'
 import { useQuery } from '@apollo/client'
 import { useQuery as useRestQuery } from '@tanstack/react-query'
-import { useAccount, useContractRead } from 'wagmi'
+import { useAccount } from 'wagmi'
 import { useToggle } from 'react-use'
-import { BigNumber } from 'ethers'
 
 import { Listing, getHydratedListings } from 'nifty/models/listing'
 import { useIsMounted } from 'nifty/hooks'
@@ -18,7 +16,11 @@ import AddIcon from '@mui/icons-material/Add'
 import { Typography, Button } from '@mui/joy'
 
 import { Frame, CircularLoader } from 'nifty/components/atoms'
-import { ErrorMessage, ListingCard } from 'nifty/components/widgets'
+import {
+    ErrorMessage,
+    ErrorBoundary,
+    ListingCard
+} from 'nifty/components/widgets'
 import { MINIMUM_LISTING_CARD_WIDTH } from 'nifty/components/widgets/ListingCard'
 import ProceedsCard from './ProceedsCard'
 import {
@@ -41,24 +43,29 @@ const USER_LISTINGS = graphql(`
     }
 `)
 
-const SellPage: NextPage = () => {
-    let { nifty, erc721Interface } = useContext(ContractsContext)
+const SellPage: FunctionComponent = () => {
+    return (
+        <Frame>
+            <ErrorBoundary>
+                <Grid minimumItemWidth='200px'>
+                    <ProceedsCard />
+                </Grid>
+            </ErrorBoundary>
+            <Frame sx={{ marginTop: 2 }}>
+                <ErrorBoundary>
+                    <UserListings />
+                </ErrorBoundary>
+            </Frame>
+        </Frame>
+    )
+}
+
+const UserListings: FunctionComponent = () => {
+    let { erc721Interface } = useContext(ContractsContext)
     let isMounted = useIsMounted()
     let { address: userAddress } = useAccount()
     let [updatingListing, setUpdatingListing] = useState<Listing | null>(null)
     let [isCreatingListing, toggleIsCreatingListing] = useToggle(false)
-
-    let {
-        data: _proceeds,
-        isLoading: isLoadingProceeds,
-        isError: didLoadingProceedsError
-    } = useContractRead({
-        address: nifty.address,
-        abi: nifty.abi,
-        functionName: 'proceeds',
-        args: [userAddress],
-        watch: true
-    })
 
     let {
         data,
@@ -94,93 +101,77 @@ const SellPage: NextPage = () => {
         startPolling(ETHEREUM_BLOCK_TIME_MILLISECONDS)
     }, [startPolling])
 
-    let proceeds: BigNumber | undefined
-    if (BigNumber.isBigNumber(_proceeds)) {
-        proceeds = _proceeds
-    }
-
-    let isLoading =
-        isLoadingProceeds || isLoadingListings || isHydratingListings
-    let didError =
-        didLoadingProceedsError ||
-        Boolean(loadListingsError) ||
-        didHydratingListingsError
+    let isLoading = isLoadingListings || isHydratingListings
+    let didError = Boolean(loadListingsError) || didHydratingListingsError
 
     if (!isMounted || isLoading) {
         return <CircularLoader />
     }
 
-    if (didError || proceeds === undefined || !listings) {
+    if (didError || !listings) {
         return <ErrorMessage onClose={refetchListings} />
     }
 
     return (
         <Frame>
-            <Grid minimumItemWidth='200px' spacing={2}>
-                <ProceedsCard proceeds={proceeds} />
-            </Grid>
-            <Frame>
-                <Frame
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginTop: 2
-                    }}
+            <Frame
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                }}
+            >
+                <Typography level='h3'>
+                    {listings.length > 0 ? 'Your listings' : 'No listings'}
+                </Typography>
+                <Button
+                    variant='outlined'
+                    startDecorator={<AddIcon />}
+                    onClick={toggleIsCreatingListing}
                 >
-                    <Typography level='h3'>
-                        {listings.length > 0 ? 'Your listings' : 'No listings'}
-                    </Typography>
-                    <Button
-                        variant='outlined'
-                        startDecorator={<AddIcon />}
-                        onClick={toggleIsCreatingListing}
-                    >
-                        Create listing
-                    </Button>
-                </Frame>
-                <Grid
-                    minimumItemWidth={MINIMUM_LISTING_CARD_WIDTH}
-                    spacing={2}
-                    sx={{
-                        marginTop: 2
-                    }}
-                >
-                    {listings.map((listing) => (
-                        <ListingCard
-                            listing={listing}
-                            // href={`/sell?address=${listing.nft.address}&id=${listing.nft.tokenId}`}
-                            isUpdatable
-                            onButtonClick={(): void => {
-                                setUpdatingListing(listing)
-                            }}
-                            key={listing.nft.id}
-                        />
-                    ))}
-                </Grid>
-                {updatingListing && (
-                    <UpdateListingModal
-                        listing={updatingListing}
-                        onSave={async (): Promise<void> => {
-                            setUpdatingListing(null)
-                            await refetchListings()
-                        }}
-                        onClose={(): void => {
-                            setUpdatingListing(null)
-                        }}
-                    />
-                )}
-                {isCreatingListing && (
-                    <CreateListingModal
-                        onList={async (): Promise<void> => {
-                            toggleIsCreatingListing()
-                            await refetchListings()
-                        }}
-                        onClose={toggleIsCreatingListing}
-                    />
-                )}
+                    Create listing
+                </Button>
             </Frame>
+            <Grid
+                minimumItemWidth={MINIMUM_LISTING_CARD_WIDTH}
+                sx={{
+                    marginTop: 2
+                }}
+            >
+                {listings.map((listing) => (
+                    <ListingCard
+                        listing={listing}
+                        // href={`/sell?address=${listing.nft.address}&id=${listing.nft.tokenId}`}
+                        isUpdatable
+                        onButtonClick={(): void => {
+                            setUpdatingListing(listing)
+                        }}
+                        key={listing.nft.id}
+                    />
+                ))}
+            </Grid>
+            {updatingListing && (
+                <UpdateListingModal
+                    listing={updatingListing}
+                    onSave={async (): Promise<void> => {
+                        setUpdatingListing(null)
+                        await refetchListings()
+                    }}
+                    onClose={(): void => {
+                        setUpdatingListing(null)
+                    }}
+                />
+            )}
+            {isCreatingListing && (
+                <CreateListingModal
+                    onList={async (): Promise<void> => {
+                        toggleIsCreatingListing()
+                        await refetchListings()
+                    }}
+                    onClose={toggleIsCreatingListing}
+                />
+            )}
         </Frame>
     )
 }

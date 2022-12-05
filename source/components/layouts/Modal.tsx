@@ -10,18 +10,18 @@ import {
     useTheme
 } from '@mui/joy'
 
-interface ModalProperties {
+interface Properties {
     title: string
     children?: ReactNode
     onClose(): void
 }
 
-const Modal: FunctionComponent<ModalProperties> = ({
+const Modal: FunctionComponent<Properties> = ({
     title,
     children,
     onClose,
     ...properties
-}: ModalProperties) => {
+}: Properties) => {
     let theme = useTheme()
     let isMobile = useMedia(`(max-width: ${theme.breakpoints.values.tablet}px)`)
     let [ref, { width: closeButtonWidth }] = useMeasure<HTMLButtonElement>()

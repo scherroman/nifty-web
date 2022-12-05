@@ -8,19 +8,19 @@ import { Typography } from '@mui/joy'
 import Link from 'next/link'
 import Frame from './Frame'
 
-interface NavigationTabProperties {
+interface Properties {
     title: string
     href: string
     onClick: () => void
     sx?: SxProps
 }
 
-const NavigationTab: FunctionComponent<NavigationTabProperties> = ({
+const NavigationTab: FunctionComponent<Properties> = ({
     title,
     href,
     onClick,
     sx
-}: NavigationTabProperties) => {
+}: Properties) => {
     let theme = useTheme()
     let pathname = usePathname()
 

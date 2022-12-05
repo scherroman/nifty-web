@@ -11,13 +11,13 @@ import { Frame } from 'nifty/components/atoms'
 
 const WIDTH = 300
 
-interface SettingsPanelProperties {
+interface Properties {
     onClose(): void
 }
 
-const SettingsPanel: FunctionComponent<SettingsPanelProperties> = ({
+const SettingsPanel: FunctionComponent<Properties> = ({
     onClose
-}: SettingsPanelProperties) => {
+}: Properties) => {
     useLockBodyScroll()
     let { mode: colorMode, setMode: setColorMode } = useColorScheme()
     let ref = useRef(null)

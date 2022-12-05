@@ -36,7 +36,7 @@ const ConditionalLink: FunctionComponent<ConditionalLinkProperties> = ({
     )
 }
 
-interface ListingCardProperties {
+interface Properties {
     listing: Listing
     href?: string
     isBuyable?: boolean
@@ -46,7 +46,7 @@ interface ListingCardProperties {
     onButtonClick?: () => void
 }
 
-const ListingCard: FunctionComponent<ListingCardProperties> = ({
+const ListingCard: FunctionComponent<Properties> = ({
     listing,
     href,
     isBuyable = false,
@@ -54,7 +54,7 @@ const ListingCard: FunctionComponent<ListingCardProperties> = ({
     isLoading = false,
     sx,
     onButtonClick = (): void => void 0
-}: ListingCardProperties) => {
+}: Properties) => {
     let { nft, price } = listing
     let { imageUrl } = nft
 

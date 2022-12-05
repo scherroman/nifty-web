@@ -2,14 +2,14 @@ import { FunctionComponent } from 'react'
 
 import { Card as JoyCard, CardProps } from '@mui/joy'
 
-type CardProperties = CardProps
+type Properties = CardProps
 
-const Card: FunctionComponent<CardProperties> = ({
+const Card: FunctionComponent<Properties> = ({
     variant = 'outlined',
     sx,
     children,
     ...properties
-}: CardProperties) => {
+}: Properties) => {
     return (
         <JoyCard
             variant={variant}

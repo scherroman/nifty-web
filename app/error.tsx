@@ -4,14 +4,12 @@ import { FunctionComponent } from 'react'
 
 import { ErrorMessage } from 'nifty/components/widgets'
 
-interface ErrorProperties {
+interface Properties {
     error: Error
     reset: () => void
 }
 
-const Error: FunctionComponent<ErrorProperties> = ({
-    reset
-}: ErrorProperties) => {
+const Error: FunctionComponent<Properties> = ({ reset }: Properties) => {
     return <ErrorMessage onClose={reset} />
 }
 

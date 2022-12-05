@@ -3,9 +3,9 @@ import { SxProps } from '@mui/joy/styles/types'
 
 import { Frame } from 'nifty/components/atoms'
 
-interface GridProperties {
+interface Properties {
     minimumItemWidth: string
-    spacing: number
+    spacing?: number
     sx?: SxProps
     children?: ReactNode
 }
@@ -13,13 +13,13 @@ interface GridProperties {
 /**
  * A CSS Grid that automatically adjusts the width of items based on the total number of items that can fit in a row
  */
-const Grid: FunctionComponent<GridProperties> = ({
+const Grid: FunctionComponent<Properties> = ({
     minimumItemWidth,
     spacing = 2,
     sx,
     children,
     ...properties
-}: GridProperties) => {
+}: Properties) => {
     return (
         <Frame
             sx={{

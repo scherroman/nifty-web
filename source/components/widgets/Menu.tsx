@@ -4,15 +4,15 @@ import { useClickAway } from 'react-use'
 
 import { Menu as JoyMenu, MenuProps } from '@mui/joy'
 
-type MenuProperties = MenuProps
+type Properties = MenuProps
 
 /**
  * Fixes buggy onClose behavior of regular Joy UI menu, so that it doesn't fire a close event until the click is finished
  */
-const Menu: FunctionComponent<MenuProperties> = ({
+const Menu: FunctionComponent<Properties> = ({
     children,
     ...properties
-}: MenuProperties) => {
+}: Properties) => {
     let ref = useRef(null)
     let { onClose } = properties
     useClickAway(

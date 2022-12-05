@@ -37,13 +37,11 @@ export const HEIGHT = '57px'
 const DESKTOP_LEFT_HALF_MARGIN = { mobile: 0, tablet: 0.5 }
 const MOBILE_TOP_MARGIN = { mobile: 1, tablet: 0 }
 
-interface HeaderProperties {
+interface Properties {
     sx?: SxProps
 }
 
-const Header: FunctionComponent<HeaderProperties> = ({
-    sx
-}: HeaderProperties) => {
+const Header: FunctionComponent<Properties> = ({ sx }: Properties) => {
     let { openSettingsPanel } = useContext(DashboardContext)
     let isMounted = useIsMounted()
     let { address, isConnected, isConnecting } = useAccount()

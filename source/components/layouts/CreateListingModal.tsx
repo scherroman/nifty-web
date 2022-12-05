@@ -30,15 +30,15 @@ const CreateListingInput = zod.object({
 
 type CreateListingInput = zod.TypeOf<typeof CreateListingInput>
 
-interface CreateListingModalProperties {
+interface Properties {
     onClose(): void
     onList(): void
 }
 
-const CreateListingModal: FunctionComponent<CreateListingModalProperties> = ({
+const CreateListingModal: FunctionComponent<Properties> = ({
     onClose,
     onList = (): void => void 0
-}: CreateListingModalProperties) => {
+}: Properties) => {
     let { nifty, erc721Interface } = useContext(ContractsContext)
     let notify = useNotify()
     let {

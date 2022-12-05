@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, FunctionComponent } from 'react'
 import { useQuery } from '@apollo/client'
 import { useQuery as useRestQuery } from '@tanstack/react-query'
 import { useContractWrite } from 'wagmi'
@@ -15,12 +15,16 @@ import {
     TRANSACTION_FAILED_STATUS
 } from 'nifty/constants'
 
-import { NextPage } from 'next'
 import { Typography } from '@mui/joy'
 
 import { Frame, CircularLoader } from 'nifty/components/atoms'
-import { ErrorMessage, ListingCard } from 'nifty/components/widgets'
+import {
+    ErrorMessage,
+    ErrorBoundary,
+    ListingCard
+} from 'nifty/components/widgets'
 import { MINIMUM_LISTING_CARD_WIDTH } from 'nifty/components/widgets/ListingCard'
+import { Grid } from 'nifty/components/layouts'
 
 const PURCHASE_NOTIFICATIONS = getNotifications('Purchase')
 
@@ -38,7 +42,22 @@ const ALL_LISTINGS = graphql(`
     }
 `)
 
-const Explore: NextPage = () => {
+const Explore: FunctionComponent = () => {
+    return (
+        <Frame>
+            <Typography level='h3' fontWeight='lg'>
+                All listings
+            </Typography>
+            <Frame sx={{ marginTop: 2 }}>
+                <ErrorBoundary>
+                    <AllListings />
+                </ErrorBoundary>
+            </Frame>
+        </Frame>
+    )
+}
+
+const AllListings: FunctionComponent = () => {
     let { nifty, erc721Interface } = useContext(ContractsContext)
     let notify = useNotify()
     let isMounted = useIsMounted()
@@ -112,41 +131,29 @@ const Explore: NextPage = () => {
     }
 
     return (
-        <Frame>
-            <Typography level='h3' fontWeight='lg'>
-                All listings
-            </Typography>
-            <Frame
-                sx={{
-                    display: 'grid',
-                    gap: (theme) => theme.spacing(2),
-                    gridTemplateColumns: `repeat(auto-fill, minmax(${MINIMUM_LISTING_CARD_WIDTH}, auto))`,
-                    marginTop: 2
-                }}
-            >
-                {listings.map((listing) => (
-                    <ListingCard
-                        listing={listing}
-                        // href={`/explore?address=${listing.nft.address}&id=${listing.nft.tokenId}`}
-                        isBuyable
-                        isLoading={listing === buyingListing}
-                        onButtonClick={(): void => {
-                            setBuyingListing(listing)
-                            buyNft?.({
-                                recklesslySetUnpreparedArgs: [
-                                    listing.nft.address,
-                                    listing.nft.tokenId
-                                ],
-                                recklesslySetUnpreparedOverrides: {
-                                    value: listing.price
-                                }
-                            })
-                        }}
-                        key={listing.nft.id}
-                    />
-                ))}
-            </Frame>
-        </Frame>
+        <Grid minimumItemWidth={MINIMUM_LISTING_CARD_WIDTH}>
+            {listings.map((listing) => (
+                <ListingCard
+                    listing={listing}
+                    // href={`/explore?address=${listing.nft.address}&id=${listing.nft.tokenId}`}
+                    isBuyable
+                    isLoading={listing === buyingListing}
+                    onButtonClick={(): void => {
+                        setBuyingListing(listing)
+                        buyNft?.({
+                            recklesslySetUnpreparedArgs: [
+                                listing.nft.address,
+                                listing.nft.tokenId
+                            ],
+                            recklesslySetUnpreparedOverrides: {
+                                value: listing.price
+                            }
+                        })
+                    }}
+                    key={listing.nft.id}
+                />
+            ))}
+        </Grid>
     )
 }
 
