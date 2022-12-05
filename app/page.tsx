@@ -29,7 +29,7 @@ import { Grid } from 'nifty/components/layouts'
 const PURCHASE_NOTIFICATIONS = getNotifications('Purchase')
 
 const ALL_LISTINGS = graphql(`
-    query getAllListings {
+    query AllListings {
         listings(first: 100, orderBy: createdAt) {
             id
             nft {

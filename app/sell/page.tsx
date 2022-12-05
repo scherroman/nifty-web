@@ -30,7 +30,7 @@ import {
 } from 'nifty/components/layouts'
 
 const USER_LISTINGS = graphql(`
-    query getUserListings($seller: Bytes!) {
+    query UserListings($seller: Bytes!) {
         listings(first: 100, orderBy: createdAt, where: { seller: $seller }) {
             id
             nft {

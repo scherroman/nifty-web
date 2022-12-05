@@ -1,100 +1,106 @@
 {
     "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "project": "tsconfig.json"
-    },
-    "env": {
-        "node": true,
-        "es2020": true,
-        "jest/globals": true
-    },
     "ignorePatterns": ["source/contracts", "source/subgraph"],
-    "plugins": [
-        "@typescript-eslint",
-        "react",
-        "react-hooks",
-        "promise",
-        "jest",
-        "testing-library"
-    ],
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:@typescript-eslint/recommended-requiring-type-checking",
-        "plugin:@typescript-eslint/strict",
-        "plugin:react/recommended",
-        "plugin:react-hooks/recommended",
-        "plugin:jest/recommended",
-        "plugin:testing-library/react",
-        "next/core-web-vitals"
-    ],
-    // "overrides": [
-    //     {
-    //         "files": ["*.ts", "*.tsx"],
-    //         "processor": "@graphql-eslint/graphql"
-    //     },
-    //     {
-    //         "files": ["*.graphql"],
-    //         "extends": "plugin:@graphql-eslint/operations-recommended",
-    //         "rules": {
-    //             "@graphql-eslint/require-id-when-available": "error"
-    //         }
-    //     }
-    // ],
-    "rules": {
-        "prefer-const": "off",
-        "@typescript-eslint/no-explicit-any": "error",
-        "@typescript-eslint/no-unused-vars": "error",
-        "@typescript-eslint/explicit-function-return-type": "error",
-        "@typescript-eslint/no-non-null-assertion": "error",
-        "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/consistent-type-assertions": [
-            "error",
-            { "assertionStyle": "never" }
-        ],
-        "@typescript-eslint/no-misused-promises": [
-            "error",
-            {
-                "checksVoidReturn": false
+    "overrides": [
+        {
+            "files": ["*.ts", "*.tsx"],
+            "parser": "@typescript-eslint/parser",
+            "parserOptions": {
+                "project": "tsconfig.json"
+            },
+            "env": {
+                "node": true,
+                "es2020": true,
+                "jest/globals": true
+            },
+            "plugins": [
+                "@typescript-eslint",
+                "react",
+                "react-hooks",
+                "promise",
+                "jest",
+                "testing-library"
+            ],
+            "extends": [
+                "eslint:recommended",
+                "plugin:@typescript-eslint/recommended",
+                "plugin:@typescript-eslint/recommended-requiring-type-checking",
+                "plugin:@typescript-eslint/strict",
+                "plugin:react/recommended",
+                "plugin:react-hooks/recommended",
+                "plugin:jest/recommended",
+                "plugin:testing-library/react",
+                "next/core-web-vitals"
+            ],
+            "rules": {
+                "prefer-const": "off",
+                "@typescript-eslint/no-explicit-any": "error",
+                "@typescript-eslint/no-unused-vars": "error",
+                "@typescript-eslint/explicit-function-return-type": "error",
+                "@typescript-eslint/no-non-null-assertion": "error",
+                "@typescript-eslint/restrict-template-expressions": "off",
+                "@typescript-eslint/consistent-type-assertions": [
+                    "error",
+                    { "assertionStyle": "never" }
+                ],
+                "@typescript-eslint/no-misused-promises": [
+                    "error",
+                    {
+                        "checksVoidReturn": false
+                    }
+                ],
+                "@typescript-eslint/naming-convention": [
+                    "error",
+                    {
+                        "selector": "default",
+                        "format": ["strictCamelCase"],
+                        "leadingUnderscore": "allow"
+                    },
+                    {
+                        "selector": "variable",
+                        "modifiers": ["const"],
+                        "format": ["StrictPascalCase", "UPPER_CASE"]
+                    },
+                    {
+                        "selector": ["variable", "parameter"],
+                        "modifiers": ["destructured"],
+                        "format": null
+                    },
+                    {
+                        "selector": ["objectLiteralProperty"],
+                        "format": null,
+                        "filter": {
+                            "regex": "(^&:.*|aria-label)",
+                            "match": true
+                        }
+                    },
+                    {
+                        "selector": ["function"],
+                        "format": ["strictCamelCase", "StrictPascalCase"]
+                    },
+                    {
+                        "selector": ["typeLike", "enum", "enumMember"],
+                        "format": ["StrictPascalCase"]
+                    }
+                ],
+                "promise/prefer-await-to-then": ["error"],
+                "promise/prefer-await-to-callbacks": ["error"],
+                "jest/valid-title": [
+                    "error",
+                    { "ignoreTypeOfDescribeName": true }
+                ]
             }
-        ],
-        "@typescript-eslint/naming-convention": [
-            "error",
-            {
-                "selector": "default",
-                "format": ["strictCamelCase"],
-                "leadingUnderscore": "allow"
-            },
-            {
-                "selector": "variable",
-                "modifiers": ["const"],
-                "format": ["StrictPascalCase", "UPPER_CASE"]
-            },
-            {
-                "selector": ["variable", "parameter"],
-                "modifiers": ["destructured"],
-                "format": null
-            },
-            {
-                "selector": ["objectLiteralProperty"],
-                "format": null,
-                "filter": {
-                    "regex": "(^&:.*|aria-label)",
-                    "match": true
-                }
-            },
-            {
-                "selector": ["function"],
-                "format": ["strictCamelCase", "StrictPascalCase"]
-            },
-            {
-                "selector": ["typeLike", "enum", "enumMember"],
-                "format": ["StrictPascalCase"]
+        },
+        {
+            "files": ["*.ts", "*.tsx"],
+            "processor": "@graphql-eslint/graphql"
+        },
+        {
+            "files": ["*.graphql"],
+            "extends": "plugin:@graphql-eslint/operations-recommended",
+            "rules": {
+                "@graphql-eslint/require-id-when-available": "error"
             }
-        ],
-        "promise/prefer-await-to-then": ["error"],
-        "promise/prefer-await-to-callbacks": ["error"],
-        "jest/valid-title": ["error", { "ignoreTypeOfDescribeName": true }]
-    }
+        }
+    ]
 }
