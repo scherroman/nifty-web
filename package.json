@@ -13,7 +13,7 @@
         "generate-types": "graphql-codegen",
         "prepare:staging": "npm run introspect:staging && npm run generate-types",
         "watch:staging": "npm run prepare:staging -- -- --watch",
-        "develop": "npm run watch:staging & next dev",
+        "develop": "trap 'kill $PID; exit' INT && npm run watch:staging & BGPID=$! && next dev",
         "build:production": "next build",
         "start:production": "npm run build:production && next start",
         "export:production": "next export"
