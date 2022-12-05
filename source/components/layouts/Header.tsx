@@ -3,7 +3,8 @@ import {
     useState,
     useContext,
     useCallback,
-    Fragment
+    Fragment,
+    MouseEvent
 } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
@@ -58,7 +59,7 @@ const Header: FunctionComponent<Properties> = ({ sx }: Properties) => {
     }, [])
 
     let handleAccountDropdownClick = useCallback(
-        (event: React.MouseEvent<HTMLElement>) => {
+        (event: MouseEvent<HTMLElement>) => {
             if (isAccountDropdownOpen) {
                 closeAccountDropdownMenu()
             } else {

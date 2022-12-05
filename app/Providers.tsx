@@ -128,7 +128,7 @@ const Providers: FunctionComponent<Properties> = ({ children }: Properties) => {
                 <QueryClientProvider client={queryClient}>
                     <WagmiConfig client={wagmiClient}>
                         <ContractsProvider>
-                            <CssVarsProvider theme={theme}>
+                            <CssVarsProvider theme={theme} defaultMode='system'>
                                 <CssBaseline />
                                 <MotionConfig
                                     transition={{

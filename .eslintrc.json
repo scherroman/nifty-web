@@ -80,7 +80,7 @@
                 "selector": ["objectLiteralProperty"],
                 "format": null,
                 "filter": {
-                    "regex": "^&:.*",
+                    "regex": "(^&:.*|aria-label)",
                     "match": true
                 }
             },

@@ -1,3 +1,4 @@
+import zod from 'zod'
 import { FunctionComponent, useRef, Fragment } from 'react'
 
 import { useClickAway } from 'react-use'
@@ -5,11 +6,17 @@ import { useColorScheme } from '@mui/joy/styles'
 import { useLockBodyScroll } from 'react-use'
 
 import CloseIcon from '@mui/icons-material/CloseRounded'
-import { Stack, IconButton, Typography, Switch, FormLabel } from '@mui/joy'
+import { Stack, IconButton, Typography, FormLabel } from '@mui/joy'
+import LightModeIcon from '@mui/icons-material/LightMode'
+import DarkModeIcon from '@mui/icons-material/DarkMode'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
 
 import { Frame } from 'nifty/components/atoms'
+import { SegmentedControl } from 'nifty/components/atoms'
 
 const WIDTH = 300
+
+const ColorMode = zod.enum(['light', 'dark', 'system'] as const)
 
 interface Properties {
     onClose(): void
@@ -69,17 +76,32 @@ const SettingsPanel: FunctionComponent<Properties> = ({
                         <CloseIcon onClick={(): void => onClose()} />
                     </IconButton>
                 </Frame>
-                <Stack
-                    direction='row'
-                    sx={{ justifyContent: 'space-between', padding: 2 }}
-                >
-                    <FormLabel>Dark mode</FormLabel>
-                    <Switch
-                        checked={colorMode === 'dark'}
-                        onClick={(): void => {
-                            setColorMode(
-                                colorMode === 'light' ? 'dark' : 'light'
-                            )
+                <Stack direction='column' sx={{ padding: 2 }}>
+                    <FormLabel>Appearance</FormLabel>
+                    <SegmentedControl
+                        options={[
+                            {
+                                label: 'Light',
+                                icon: <LightModeIcon />,
+                                selected: colorMode === 'light',
+                                key: 'light'
+                            },
+                            {
+                                label: 'System',
+                                icon: <Brightness4Icon />,
+                                selected: colorMode === 'system',
+                                key: 'system'
+                            },
+                            {
+                                label: 'Dark',
+                                icon: <DarkModeIcon />,
+                                selected: colorMode === 'dark',
+                                key: 'dark'
+                            }
+                        ]}
+                        sx={{ marginTop: 1 }}
+                        onSelect={(option): void => {
+                            setColorMode(ColorMode.parse(option.key))
                         }}
                     />
                 </Stack>
