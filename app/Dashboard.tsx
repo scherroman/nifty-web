@@ -13,6 +13,8 @@ import { useAccount } from 'wagmi'
 import { ContractsContext, DashboardContext } from 'nifty/contexts'
 import { useIsMounted } from 'nifty/hooks'
 
+import { Typography } from '@mui/joy'
+
 import { Frame } from 'nifty/components/atoms'
 import Header, {
     HEIGHT as HEADER_HEIGHT
@@ -39,7 +41,7 @@ const Dashboard: FunctionComponent<Properties> = ({ children }) => {
 
     let message = ''
     if (!isConnected) {
-        message = 'Connect to get started!'
+        message = 'Connect your wallet to get started!'
     } else if (nifty.address === '') {
         message = 'Nifty smart contract not found'
     }
@@ -65,7 +67,7 @@ const Dashboard: FunctionComponent<Properties> = ({ children }) => {
                                 height: `calc(100vh - ${HEADER_HEIGHT})`
                             }}
                         >
-                            {message}
+                            <Typography level='h5'>{message}</Typography>
                         </Frame>
                     ))}
             </Frame>
