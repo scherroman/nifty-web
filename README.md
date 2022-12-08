@@ -1,6 +1,6 @@
 # Nifty-Web
 
-Built with React, Next.js, Wagmi, and The Graph
+A web app for Nifty, built with [React](https://github.com/facebook/react), [Next.js](https://github.com/vercel/next.js), [wagmi](https://github.com/wagmi-dev/wagmi), and [The Graph](https://thegraph.com/en/)
 
 ## Getting Started
 
@@ -18,19 +18,7 @@ npm install
 npm run develop
 ```
 
-**4. Add hardhat as a network in metamask**
-
-Open Metamask -> Click the network dropdown in the top middle -> Add network -> Fill out the form as shown below -> Save
-
-**Hardhat Network Details**
-
-Network name: **Hardhat Localhost**
-
-New RPC URL: **http://127.0.0.1:8545/**
-
-Chain ID: **31337**
-
-Currency Symbol: **ETH**
+The development environment uses the deployed [Nifty testnet contract and subgraph](https://github.com/scherroman/nifty)
 
 ## Testing
 
@@ -88,20 +76,16 @@ The [Frame](./components/Frame.tsx) component is a generic base component that c
 
 ### Pre-commit Hooks
 
-All checks are run locally automatically before a commit is made using `npm run check`.
+All checks are run locally automatically before a commit is made using a husky pre-commit hook.
 
 **Modify the existing pre-commit hook**
 
 Edit the [.husky/pre-commit](.husky/pre-commit) file
 
-**Add a pre-commit hook**
+**Add a pre-commit hook from scratch**
 
-`npx husky add .husky/pre-commit "npm run check"`
+```
+npx husky add .husky/pre-commit "npm run check"
+```
 
-See the [Husky Documentation](https://typicode.github.io/husky/#/)to learn more on how to configure pre-commit hooks.
-
-## Troubleshooting
-
-### Nonce too high error when testing locally with hardhat
-
-This is likely caused by metamask being out of sync with the current local hardhat chain, as the expected nonce gets out of sync when a new local hardhat chain is spun up. To fix this, open Metamask -> click the account circle in the top right -> Settings -> Advanced -> Reset Account. This will only clear the transaction history and metamask metadata for the hardhat localhost account.
+See the [Husky Documentation](https://typicode.github.io/husky/#/) to learn more on how to configure pre-commit hooks.
