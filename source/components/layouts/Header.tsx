@@ -110,6 +110,7 @@ const Header: FunctionComponent<Properties> = ({ sx }: Properties) => {
                             marginLeft: 1,
                             display: { mobile: 'inline-flex', tablet: 'none' }
                         }}
+                        aria-label='menu'
                         onClick={toggleIsExpanded}
                     >
                         {isExpanded ? <CloseIcon /> : <MenuIcon />}
@@ -216,6 +217,7 @@ const Header: FunctionComponent<Properties> = ({ sx }: Properties) => {
                         sx={{
                             marginLeft: 1
                         }}
+                        aria-label='settings'
                         onClick={(): void => openSettingsPanel()}
                     >
                         <SettingsIcon />

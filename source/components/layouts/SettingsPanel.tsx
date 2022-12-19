@@ -72,7 +72,12 @@ const SettingsPanel: FunctionComponent<Properties> = ({
                     }}
                 >
                     <Typography level='h5'>Settings</Typography>
-                    <IconButton size='sm' color='neutral' variant='plain'>
+                    <IconButton
+                        size='sm'
+                        color='neutral'
+                        variant='plain'
+                        aria-label='close'
+                    >
                         <CloseIcon onClick={(): void => onClose()} />
                     </IconButton>
                 </Frame>

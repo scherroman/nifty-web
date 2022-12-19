@@ -40,7 +40,34 @@ npm run typecheck
 npm run staticcheck
 ```
 
-**Run tests**
+**Run unit tests**
+
+```
+npm run test:unit
+```
+
+**Run end to end tests**
+
+```
+npm run test:end-to-end
+```
+
+**Debug end to end tests**
+
+```
+npm run test:end-to-end -- --debug
+
+// Debug a specific test
+npm run test:end-to-end -- --debug <filter>
+```
+
+**Generate tests interactively**
+
+```
+npx playwright codegen
+```
+
+**Run all tests**
 
 ```
 npm run test
@@ -89,3 +116,9 @@ npx husky add .husky/pre-commit "npm run check"
 ```
 
 See the [Husky Documentation](https://typicode.github.io/husky/#/) to learn more on how to configure pre-commit hooks.
+
+## Troubleshooting
+
+### Some playwright tests are flaky / randomly failing
+
+Ensure that Playwright is testing a production build of the app, as development builds are slow and can cause flakiness / random failures due to timeouts.

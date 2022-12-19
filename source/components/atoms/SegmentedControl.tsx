@@ -93,7 +93,7 @@ const SegmentedControl: FunctionComponent<Properties> = ({
                                 ? 'soft'
                                 : 'plain'
                         }
-                        componentsProps={{
+                        slotProps={{
                             input: { 'aria-label': option.label ?? option.key },
                             action: {
                                 sx: { borderRadius: 0, transition: 'none' }
