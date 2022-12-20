@@ -8,6 +8,7 @@ jobs:
     test:
         timeout-minutes: 60
         runs-on: ubuntu-latest
+        environment: staging
         steps:
             - name: Checkout repository
               uses: actions/checkout@v3
@@ -19,6 +20,11 @@ jobs:
               run: npm ci
             - name: Install Playwright browsers
               run: npx playwright install --with-deps
+            - name: 'Create .env file'
+              run: |
+                  touch .env.production
+                  echo NEXT_PUBLIC_ALCHEMY_API_KEY=${{ secrets.ALCHEMY_API_KEY }} >> .env.production
+                  echo NEXT_PUBLIC_SUBGRAPH_API_ENDPOINT="https://api.studio.thegraph.com/query/37867/nifty-staging/0.0.6" >> .env.production
             - name: Run all checks
               run: npm run check
             - name: Save Playwright report
