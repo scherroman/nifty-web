@@ -22,9 +22,9 @@ jobs:
               run: npx playwright install --with-deps
             - name: 'Create .env file'
               run: |
-                  touch .env.production
-                  echo NEXT_PUBLIC_ALCHEMY_API_KEY=${{ secrets.ALCHEMY_API_KEY }} >> .env.production
-                  echo NEXT_PUBLIC_SUBGRAPH_API_ENDPOINT="https://api.studio.thegraph.com/query/37867/nifty-staging/0.0.6" >> .env.production
+                  touch .env.development
+                  echo NEXT_PUBLIC_ALCHEMY_API_KEY=${{ secrets.ALCHEMY_API_KEY }} >> .env.development
+                  echo NEXT_PUBLIC_SUBGRAPH_API_ENDPOINT="https://api.studio.thegraph.com/query/37867/nifty-staging/0.0.6" >> .env.development
             - name: Run all checks
               run: npm run check
             - name: Save Playwright report
