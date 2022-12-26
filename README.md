@@ -14,8 +14,8 @@ npm install
 
 **3. Run the development server**
 
-```bash
-npm run develop
+```
+npm run start:development
 ```
 
 The development environment uses the deployed [Nifty testnet contract and subgraph](https://github.com/scherroman/nifty)
