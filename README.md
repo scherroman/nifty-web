@@ -12,7 +12,18 @@ A web app for Nifty, built with [React](https://github.com/facebook/react), [Nex
 npm install
 ```
 
-**3. Run the development server**
+**3. Add a development environment file**
+
+```
+touch .env.development
+```
+
+Add the following environment variables:
+
+-   NEXT_PUBLIC_ALCHEMY_API_KEY - Open [Alchemy](https://dashboard.alchemy.com) to create api keys
+-   NEXT_PUBLIC_SUBGRAPH_API_ENDPOINT - https://api.studio.thegraph.com/query/37867/nifty-staging/0.0.6
+
+**4. Run the development server**
 
 ```
 npm run start:development
